@@ -1,0 +1,259 @@
+P16 assembler v1.5 (Feb  9 2024)	c:\uni\LEIC 2 ANO\2semestre\AC\labs_code\Computer-Architecture-Class\lab03\18_AC_ex2.lst	Wed Apr 24 16:55:04 2024
+
+Sections
+Index   Name            Address   Size
+0       .startup        0000      0012 18
+1       .text           0012      00AA 170
+2       .data           00BC      0002 2
+3       .stack          00BE      0040 64
+
+Symbols
+Name                    Type      Value       Section
+_start                  LABEL     0004 4      .startup
+addr_main               LABEL     000E 14     .startup
+addr_stack_top          LABEL     0010 16     .startup
+detect_falling_edge     LABEL     005A 90     .text
+detect_falling_edge_l0  LABEL     006E 110    .text
+domain_last             LABEL     00BD 189    .data
+domain_last_addr        LABEL     0072 114    .text
+get_valin               LABEL     0052 82     .text
+inport_addr             LABEL     0080 128    .text
+inport_read             LABEL     007A 122    .text
+line#10                 LABEL     000C 12     .startup
+line#4                  LABEL     0002 2      .startup
+main                    LABEL     0012 18     .text
+main_l0                 LABEL     0030 48     .text
+main_loop               LABEL     0022 34     .text
+main_print              LABEL     0042 66     .text
+MASK_DOMAIN             ABSOLUTE  0001 1      .startup
+MASK_VAL_IN             ABSOLUTE  00F0 240    .startup
+MASK_VAL_OUT            ABSOLUTE  00FF 255    .startup
+outport_addr            LABEL     008C 140    .text
+outport_clear_bits      LABEL     009A 154    .text
+outport_img             LABEL     00BC 188    .data
+outport_img_addr        LABEL     00BA 186    .text
+outport_set_bits        LABEL     008E 142    .text
+outport_write           LABEL     0082 130    .text
+outport_write_bits      LABEL     00A8 168    .text
+POS_DOMAIN              ABSOLUTE  0000 0      .startup
+POS_VAL_IN              ABSOLUTE  0004 4      .startup
+SDP16_INPORT_ADDR       ABSOLUTE  FF80 65408  .startup
+SDP16_OUTPORT_ADDR      ABSOLUTE  FFC0 65472  .startup
+SIGNED                  ABSOLUTE  0000 0      .startup
+STACK_SIZE              ABSOLUTE  00FC 252    .data
+stack_top               LABEL     00FE 254    .stack
+UNSIGNED                ABSOLUTE  0001 1      .startup
+valin2z                 LABEL     0074 116    .text
+
+Code listing
+   1           		.section .startup
+   2           		; sec��o com c�digo de arranque
+   3 0000 01 58		b		_start	
+   4 0002 FF 5B		b 		.	    
+   5           	_start:
+   6 0004 5D 0C		ldr		sp, addr_stack_top
+   7 0006 80 B7		mov		r0, pc
+   8 0008 0E A2		add		lr, r0, #4
+   9 000A 1F 0C		ldr		pc, addr_main
+  10 000C FF 5B		b		.
+  11           	addr_main:
+  12 000E 12 00		.word main
+  13           	addr_stack_top:
+  14 0010 FE 00		.word stack_top
+  15           	
+  16           	/*--------------------------------------------
+  17           	 * Defini��o de constantes
+  18           	 *--------------------------------------------*/
+  19          		.equ	SDP16_INPORT_ADDR , 	0xFF80
+  20          		.equ	SDP16_OUTPORT_ADDR, 	0xFFC0
+  21          		.equ	MASK_VAL_OUT, 			0xFF
+  22          		.equ	MASK_VAL_IN, 			0xF0
+  23          		.equ	MASK_DOMAIN, 			0x01
+  24          		.equ	POS_VAL_IN, 			4
+  25          		.equ	POS_DOMAIN, 			0
+  26          		.equ	UNSIGNED, 				1
+  27          		.equ	SIGNED, 				0
+  28           		
+  29           		.text
+  30           		; sec��o com c�digo aplicacional
+  31           		
+  32           	/*
+  33           	#define UNSIGNED  1
+  34           	#define SIGNED    0
+  35           	uint16_t main() {
+  36           		uint8_t domain = UNSIGNED;
+  37           	   while (1) {
+  38           	      uint8_t port_val = inport_read();
+  39           	      if (detect_falling_edge(port_val) == TRUE)
+  40           	         domain = domain == UNSIGNED ? SIGNED : UNSIGNED;
+  41           	      uint8_t val_out = get_valin(port_val);
+  42           	      if (domain == SIGNED) {
+  43           	         val_out = valin2z(val_out);
+  44           	      }
+  45           	      outport_write_bits(MASK_VAL_OUT, val_out);
+  46           	   }
+  47           	   return 0;
+  48           	}
+  49           	*/
+  50           	main:
+  51 0012 0E 24		push	lr
+  52 0014 04 24		push	r4						; port_val
+  53 0016 05 24		push	r5						; val_out
+  54 0018 06 24		push	r6						; domain
+  55 001A 16 60		mov		r6, #UNSIGNED
+  56 001C A0 0E		ldr		r0, domain_last_addr
+  57 001E 01 60		mov		r1, #0
+  58 0020 01 28		strb	r1, [r0]
+  59           	main_loop:
+  60 0022 2B 5C		bl		inport_read			; R0 = inport_read()
+  61 0024 04 B0		mov		r4, r0					; port_val = R0
+  62 0026 19 5C		bl		detect_falling_edge	; R0 = detect_falling_edge(port_val)
+  63 0028 00 C0		and		r0, r0, r0
+  64 002A 02 40		bzs		main_l0				; if (detect_falling_edge(port_val) == TRUE)
+  65 002C 10 60		mov		r0, #1
+  66 002E 66 D0		eor		r6, r6, r0				; domain = domain ^ 1;
+  67           	main_l0:
+  68 0030 00 B2		mov		r0, r4					; R0 = port_val
+  69 0032 0F 5C		bl		get_valin				; R0 = get_valin(port_val)
+  70 0034 05 B0		mov		r5, r0					; val_out = R0
+  71 0036 10 60		mov		r0, #UNSIGNED
+  72 0038 60 B8		cmp		r6, r0
+  73 003A 03 40		beq		main_print			; if (domain == SIGNED)
+  74 003C 80 B2		mov		r0, r5
+  75 003E 1A 5C		bl		valin2z				; R0 = valin2z(val_out)	
+  76 0040 05 B0		mov		r5, r0					; val_out = R0
+  77           	main_print:
+  78 0042 F0 6F		mov		r0, #MASK_VAL_OUT 	; R0 = MASK_VAL_OUT
+  79 0044 81 B2		mov		r1, r5					; R1 = val_out
+  80 0046 30 5C		bl		outport_write_bits	; outport_write_bits(MASK_VAL_OUT, val_out)
+  81 0048 EC 5B		b 		main_loop
+  82 004A 06 04		pop		r6
+  83 004C 05 04		pop		r5
+  84 004E 04 04		pop		r4
+  85 0050 0F 04		pop		pc
+  86           		
+  87           	; uint8_t get_valin(uint8_t inport_val);
+  88           	get_valin:
+  89 0052 01 6F		mov		r1, #MASK_VAL_IN
+  90 0054 80 C0		and		r0, r0, r1
+  91 0056 00 EA		lsr		r0, r0, #POS_VAL_IN
+  92 0058 0F B7		mov		pc, lr
+  93           	
+  94           	/*
+  95           	uint8_t detect_falling_edge(uint8_t inport_val) {
+  96           		uint8_t domain_now = (inport_val & MASK_DOMAIN) >> POS_DOMAIN;
+  97           		uint8_t falling_edge = domain_last == 1 && domain_now == 0;
+  98           		domain_last = domain_now;
+  99           		return falling_edge;
+ 100           	}
+ 101           	*/
+ 102           	detect_falling_edge:
+ 103 005A 11 60		mov		r1, #MASK_DOMAIN				
+ 104 005C 81 C0		and		r1, r0, r1					; R1 = inport_val & MASK_DOMAIN
+ 105 005E 11 E8		lsr		r1, r1, #POS_DOMAIN		; R1 = R1 >> POS_DOMAIN
+ 106 0060 00 60		mov		r0, #0						; falling_edge = FALSE
+ 107 0062 72 0C		ldr		r2, domain_last_addr
+ 108 0064 04 44		bzc		detect_falling_edge_l0	; domain_now == 0
+ 109 0066 23 08		ldrb	r3, [r2]					; R3 = domain_last
+ 110 0068 B3 C1		and		r3, r3, r3
+ 111 006A 01 40		bzs		detect_falling_edge_l0	; domain_last == 1
+ 112 006C 10 60		mov		r0, #1						; falling_edge = TRUE
+ 113           	detect_falling_edge_l0:
+ 114 006E 21 28		strb	r1, [r2]					; domain_last = domain_now
+ 115 0070 0F B7		mov		pc, lr						; return falling_edge
+ 116           	domain_last_addr:
+ 117 0072 BD 00		.word	domain_last
+ 118           		
+ 119           	; uint8_t valin2z(uint8_t val);
+ 120           	valin2z:
+ 121 0074 00 E6		lsl		r0, r0, #12
+ 122 0076 00 F6		asr		r0, r0, #12
+ 123 0078 0F B7		mov		pc, lr
+ 124           	
+ 125           	/*--------------------------------------------
+ 126           	 * Implementa��o da API para portos paralelos
+ 127           	 *--------------------------------------------*/
+ 128           	/*
+ 129           	Devolve o valor atual do estado dos bits do porto de entrada.
+ 130           	uint16_t inport_read ( );
+ 131           	*/
+ 132           	inport_read:
+ 133 007A 20 0C		ldr		r0, inport_addr
+ 134 007C 00 08		ldrb	r0, [r0]
+ 135 007E 0F B7		mov		pc, lr
+ 136           	
+ 137           	inport_addr:
+ 138 0080 80 FF		.word	SDP16_INPORT_ADDR
+ 139           	
+ 140           	/* 
+ 141           	Faz a inicia��o do porto, atribuindo o valor value aos seus bits.
+ 142           	void outport_write ( uint8_t value );
+ 143           	*/
+ 144           	outport_write:
+ 145 0082 41 0C		ldr		r1, outport_addr
+ 146 0084 10 28		strb	r0, [r1]
+ 147           		; save value to image port
+ 148 0086 91 0D		ldr		r1, outport_img_addr
+ 149 0088 10 28		strb	r0, [r1]
+ 150 008A 0F B7		mov		pc, lr	
+ 151           	
+ 152           	outport_addr:
+ 153 008C C0 FF		.word	SDP16_OUTPORT_ADDR
+ 154           	
+ 155           	/* Atribui o valor l�gico um aos pinos do porto de sa�da identificados com o valor um em pins_mask. O valor dos restantes bits n�o � alterado.
+ 156           	void outport_set_bits ( uint8_t pins_mask ); 
+ 157           	*/
+ 158           	outport_set_bits:
+ 159 008E 0E 24		push	lr
+ 160 0090 41 0D		ldr		r1, outport_img_addr
+ 161 0092 11 08		ldrb	r1, [r1]
+ 162 0094 80 C8		orr		r0, r0, r1
+ 163 0096 F5 5F		bl		outport_write
+ 164 0098 0F 04		pop		pc
+ 165           	
+ 166           	/*
+ 167           	Atribui o valor l�gico zero aos pinos do porto de sa�da identificados com o valor um em pins_mask. O valor dos restantes bits n�o � alterado.
+ 168           	void outport_clear_bits ( uint8_t pins_mask );
+ 169           	*/
+ 170           	outport_clear_bits:
+ 171 009A 0E 24		push 	lr
+ 172 009C E1 0C		ldr		r1, outport_img_addr
+ 173 009E 11 08		ldrb	r1, [r1]
+ 174 00A0 10 B0		mvn		r0, r0
+ 175 00A2 80 C0		and		r0, r0, r1
+ 176 00A4 EE 5F		bl		outport_write
+ 177 00A6 0F 04		pop		pc
+ 178           		
+ 179           	/* 
+ 180           	Atribui aos bits do porto de sa�da identificados com o valor l�gico um em pins_mask o valor dos bits correspondentes de value. O valor dos restantes bits n�o � alterado.
+ 181           	void outport_write_bits ( uint8_t pins_mask , uint8_t value );
+ 182           	*/
+ 183           	outport_write_bits:
+ 184 00A8 0E 24		push	lr
+ 185 00AA 11 C0		and		r1, r1, r0 ; filtra os bits em value de acordo com pins_mask
+ 186 00AC 62 0C		ldr		r2, outport_img_addr
+ 187 00AE 22 08		ldrb	r2, [r2]
+ 188 00B0 10 B0		mvn		r0, r0
+ 189 00B2 00 C1		and		r0, r0, r2
+ 190 00B4 80 C8		orr		r0, r0, r1
+ 191 00B6 E5 5F		bl		outport_write
+ 192 00B8 0F 04		pop		pc
+ 193           	
+ 194           	outport_img_addr:
+ 195 00BA BC 00		.word	outport_img
+ 196           	
+ 197           		.data
+ 198           		; sec��o com dados globais iniciados e n�o iniciados
+ 199           	outport_img:
+ 200 00BC 00   		.space		1
+ 201           	domain_last:
+ 202 00BD 00   		.space		1
+ 203           		
+ 204          		.equ STACK_SIZE, 64
+ 205           		.section .stack
+ 206           		; sec��o stack para armazenamento de dados tempor�rios
+ 207 00BE 00   		.space	STACK_SIZE
+ 207 .... ..
+ 207 00FD 00
+ 208           	stack_top:
+ 208           	

@@ -1,0 +1,278 @@
+P16 assembler v1.5 (Feb  9 2024)	c:\uni\LEIC 2 ANO\2semestre\AC\projects_AC\ComputerArchProj\TP1\TP1.lst	Fri Mar 22 19:38:24 2024
+
+Sections
+Index   Name            Address   Size
+0       .startup        0000      0012 18
+1       .text           0012      00A6 166
+2       .data           00B8      0018 24
+3       .stack          00D0      0040 64
+
+Symbols
+Name                    Type      Value       Section
+_start                  LABEL     0004 4      .startup
+AMBAR_SCALE             ABSOLUTE  0001 1      .startup
+ambar_scale_addr        LABEL     00B0 176    .text
+AUX                     ABSOLUTE  0003 3      .startup
+aux_addr                LABEL     00AC 172    .text
+color_histogram         LABEL     00B8 184    .data
+color_histogram_addr    LABEL     0080 128    .text
+color_scale             LABEL     0086 134    .text
+color_scale_end         LABEL     00A8 168    .text
+color_scale_first_if    LABEL     008A 138    .text
+color_scale_second_if   LABEL     009C 156    .text
+CRITICAL_TIME           ABSOLUTE  0096 150    .startup
+critical_time_addr      LABEL     00B6 182    .text
+GREEN_SCALE             ABSOLUTE  0000 0      .startup
+green_scale_addr        LABEL     00B2 178    .text
+line#34                 LABEL     0002 2      .startup
+line#40                 LABEL     000C 12     .startup
+main                    LABEL     0012 18     .text
+main_addr               LABEL     0010 16     .startup
+main_body               LABEL     0024 36     .text
+main_end                LABEL     0046 70     .text
+RED_SCALE               ABSOLUTE  0002 2      .startup
+red_scale_addr          LABEL     00AE 174    .text
+SIZE                    ABSOLUTE  000A 10     .startup
+size_addr               LABEL     0084 132    .text
+STACK_SIZE              ABSOLUTE  00F8 248    .data
+stack_top               LABEL     0110 272    .stack
+stack_top_addr          LABEL     000E 14     .startup
+test_color_scale        LABEL     004E 78     .text
+test_color_scale_body   LABEL     0062 98     .text
+test_color_scale_for_ctrl LABEL     0070 112    .text
+test_color_scale_for_end LABEL     0076 118    .text
+test_color_scale_update LABEL     006E 110    .text
+times                   LABEL     00BC 188    .data
+times_addr              LABEL     0082 130    .text
+WARNING_TIME            ABSOLUTE  012C 300    .startup
+warning_time_addr       LABEL     00B4 180    .text
+while_main_body         LABEL     0030 48     .text
+while_main_ctrl         LABEL     003C 60     .text
+while_main_end          LABEL     0044 68     .text
+
+Code listing
+   1           	
+   2           	/*
+   3           	1.b) Os símbolos RED_SCALE, AMBAR_SCALE, GREEN_SCALE, WARNING_TIME e CRITICAL_TIME são todos
+   4           	    constantes do programa, logo cada constante está codificada a 16 bits. Como no P16 a memória
+   5           	    guarda informção a cada word (16 bits), vão ser necessárias 5 words em memória, que equivalem
+   6           	    a 5(words) * 2bytes(16 bits) = 10 bytes
+   7           	
+   8           	2) Todas as variavéis globais devem ser implementadas na secção .data independentemente se são
+   9           	   inicializadas ou não
+  10           	   A variável uint8_t color_histogram[3] como ocupa um byte na secção .data esta será implementada
+  11           	   da seguinte forma: color_histogram: .space 3  (uma vez que esta irá alocar 3bytes que serão 
+  12           	   preenchidos no decorrer do progroma).
+  13           	   A variável uint16_t times[] = { 65535, 500, 301, 300, 299, 151, 150, 149, 1, 0}, já inicializada 
+  14           	   irá para cada elemento precisar duma word para  representar, ficando implementada da seguinte
+  15           	   forma: times: .word 65535, 500, 301, 300, 299, 151, 150, 149, 1, 0.
+  16           	
+  17           	3.b) Para a implementação da função color_scale serão necessários 38 bytes em memória. Cada instrução
+  18           	     no P16 é codificada a 16 bits -> temos 2 bytes por cada instrução. Como se tem 19 instruções serão 
+  19           	     necessários 38 bytes em memória para a sua implementação. 
+  20           	
+  21           	4.a) Damos preferência sempre à utilização dos registos de r0..r3 para utilização nas funções pois a 
+  22           	    partir desse momento é preciso memória para os restantes registos, mas como a variável i é usada num 
+  23           	    contexto local no ciclo 'for' para fazer a chamada função color_scale(), o seu tempo de vida depende 
+  24           	    da chamada à função, logo devemos associá-la aos registos de r4..r12.
+  25           	    Logo a afirmação está correta, uma vez que de acordo os standard's da linguagem Assembly para o P16.
+  26           	
+  27           	
+  28           	
+  29           	
+  30           	*/
+  31           	
+  32           		.section .startup	
+  33 0000 01 58		b		_start		
+  34 0002 FF 5B		b 		.			
+  35           	_start:
+  36 0004 4D 0C		ldr		sp, stack_top_addr	
+  37 0006 80 B7		mov		r0, pc				 
+  38 0008 0E A2		add		lr, r0, #4			
+  39 000A 2F 0C		ldr		pc, main_addr		
+  40 000C FF 5B		b 		.	
+  41           	stack_top_addr:
+  42 000E 10 01		.word stack_top
+  43           	main_addr:
+  44 0010 12 00		.word	main
+  45           		
+  46          	    .equ    AUX, 3
+  47          	    .equ    RED_SCALE, 2
+  48          	    .equ    AMBAR_SCALE, 1
+  49          	    .equ    GREEN_SCALE, 0
+  50          	    .equ    WARNING_TIME, 300
+  51          	    .equ    CRITICAL_TIME, 150
+  52          	    .equ    SIZE, 10
+  53           	
+  54           		.text
+  55           	
+  56           	;r0 = i, r1 = colorhistogram
+  57           	main:
+  58 0012 0E 24		push	lr
+  59 0014 04 24	    push    r4          ;colorhistogram
+  60 0016 05 24	    push    r5          ;i
+  61 0018 06 24	    push    r6          ;auxiliar
+  62 001A 20 0F	    ldr		r0, color_histogram_addr
+  63 001C 04 08	    ldrb    r4, [r0]
+  64 001E 04 B0	    mov     r4, r0
+  65 0020 05 60	    mov     r5, #0                  ;i = 0
+  66 0022 0C 58	    b       while_main_ctrl
+  67           	    
+  68           	main_body:
+  69 0024 F2 0E	    ldr     r2, size_addr           ;size
+  70 0026 D0 0E	    ldr     r0, times_addr          ;load do array times
+  71 0028 01 B2	    mov     r1, r4                  ;passar o colorhistogram para o r1
+  72 002A 11 5C	    bl      test_color_scale        ;salto para a função test_color_scale
+  73 002C 00 60	    mov     r0, #0                  ;retornar em r0 o valor 0 
+  74 002E 0B 58	    b       main_end                ;salto para main_end
+  75           	
+  76           	while_main_body:
+  77 0030 D5 A0	    add     r5, r5, #1          ;i++
+  78 0032 C4 32	    str     r4, [r4, r5]        ;r1 = colorhistogram[i++]
+  79 0034 01 60	    mov     r1, #0
+  80 0036 C1 32	    str     r1, [r4, r5]        ; r1 =  colorhistogram[i++] = 0
+  81 0038 01 58	    b       while_main_ctrl
+  82 003A F4 5B	    b       main_body
+  83           	
+  84           	while_main_ctrl:
+  85 003C 76 0F	    ldr     r6, aux_addr
+  86 003E 50 BB	    cmp     r5, r6              ;i - 3
+  87 0040 01 48	    bhs     while_main_end      ; caso i >= 3 vai para o fim do while
+  88 0042 F6 5B	    b       while_main_body     ; caso i < 3 faz o que está dentro do while
+  89           	
+  90           	while_main_end:
+  91 0044 EF 5B	    b       main_body
+  92           	
+  93           	main_end:
+  94 0046 04 04	    pop     r4
+  95 0048 05 04	    pop     r5
+  96 004A 06 04	    pop     r6
+  97 004C 0F 04		pop		pc
+  98           	
+  99           	;--------------------------------------------------------------
+ 100           	;r0 = t[], r1 = c[], r2 = size -> valores que são recebidos da chamada à função
+ 101           	;em test_color_scale -> parâmetros relacionados com a chamada à função = t[], size, i
+ 102           	;r4 = t[], r5 = size, r6 = i, r1 = colorhistogram (este parâmetro usa o retorno do bl de color_scale)
+ 103           	
+ 104           	test_color_scale:
+ 105 004E 0E 24	    push    lr
+ 106 0050 04 24	    push    r4      ;times[]
+ 107 0052 05 24	    push    r5      ;size
+ 108 0054 06 24	    push    r6      ;i
+ 109 0056 07 24	    push    r7      ;colorhistogram[]
+ 110           	
+ 111           	    ;transferência de dados
+ 112 0058 04 B0	    mov     r4, r0                          ;valor de times[]   
+ 113 005A 87 B0	    mov     r7, r1                          ;valor de colorhistogram[]
+ 114 005C 05 B1	    mov     r5, r2                          ;valor de size
+ 115 005E 06 60	    mov     r6, #0                          ;i = 0 -> condição do for 
+ 116 0060 07 58	    b       test_color_scale_for_ctrl
+ 117           	
+ 118           	test_color_scale_body:
+ 119 0062 40 13	    ldr     r0, [r4, r6]                     ;r0 = t[i] -> está bem
+ 120 0064 10 5C	    bl      color_scale                      ;recebe em r0 o valor de t 
+ 121 0066 71 18	    ldrb     r1, [r7, r0]                    ;valor com o indice t em color_histogram
+ 122 0068 91 A0	    add      r1, r1, #1                      ;incrementar o valor desse indice por 1
+ 123 006A 71 38	    strb     r1, [r7, r0]                    ;escrever o valor incrementado em r1 para o arraay color_histogram[]
+ 124 006C 00 58	    b       test_color_scale_update
+ 125           	
+ 126           	test_color_scale_update:
+ 127 006E 66 A1	    add     r6, r6, #2
+ 128           	
+ 129           	test_color_scale_for_ctrl:
+ 130 0070 E0 BA	    cmp     r6, r5      ;i - size
+ 131 0072 01 50	    bge     test_color_scale_for_end        ;caso i >= size -> sai do ciclo com sinal logo = bge
+ 132 0074 F6 5B	    b       test_color_scale_body
+ 133           	
+ 134           	test_color_scale_for_end:
+ 135 0076 07 04	    pop     r7
+ 136 0078 06 04	    pop     r6
+ 137 007A 05 04	    pop     r5
+ 138 007C 04 04	    pop     r4
+ 139 007E 0F 04	    pop     pc
+ 140           	
+ 141           	color_histogram_addr:
+ 142 0080 B8	    .byte color_histogram
+ 143 0081 00  	    .align 1
+ 144           	
+ 145           	times_addr:
+ 146 0082 BC 00	    .word times
+ 147           	
+ 148           	size_addr:
+ 149 0084 14 00	    .word   SIZE*2
+ 150           	
+ 151           	;retorno de test_color_scale vai em r0 == valor de t[i]
+ 152           	;parâmetros -> r0 = t, r1 = c, r2 = auxiliar para constantes
+ 153           	
+ 154           	color_scale:         
+ 155 0086 52 0D	    ldr     r2, green_scale_addr
+ 156 0088 01 B1	    mov     r1, r2      ;c = GREEN_SCALE
+ 157           	
+ 158           	color_scale_first_if:
+ 159 008A 52 0D	    ldr     r2, critical_time_addr
+ 160 008C 00 B9	    cmp     r0, r2
+ 161 008E 06 4C	    blo     color_scale_second_if
+ 162 0090 12 0D	    ldr     r2, warning_time_addr
+ 163 0092 00 B9	    cmp     r0, r2
+ 164 0094 03 48	    bhs     color_scale_second_if
+ 165 0096 C2 0C	    ldr     r2, ambar_scale_addr
+ 166 0098 01 B1	    mov     r1, r2                  ;c = ambar_scale
+ 167 009A 06 58	    b       color_scale_end
+ 168           	
+ 169           	color_scale_second_if:
+ 170 009C C2 0C	    ldr     r2, critical_time_addr
+ 171 009E 00 B9	    cmp     r0, r2
+ 172 00A0 03 48	    bhs     color_scale_end
+ 173 00A2 52 0C	    ldr     r2, red_scale_addr
+ 174 00A4 01 B1	    mov     r1, r2                  ;c = red_scale
+ 175 00A6 00 58	    b       color_scale_end
+ 176           	
+ 177           	color_scale_end:
+ 178 00A8 80 B0	    mov     r0, r1      ;r0 = c
+ 179 00AA 0F B7	    mov     pc, lr
+ 180           	
+ 181           	;definição dos dados do programa
+ 182           	
+ 183           	aux_addr:
+ 184 00AC 03 00	    .word   AUX
+ 185           	
+ 186           	red_scale_addr:
+ 187 00AE 02 00	    .word   RED_SCALE
+ 188           	
+ 189           	ambar_scale_addr:
+ 190 00B0 01 00	    .word   AMBAR_SCALE
+ 191           	
+ 192           	green_scale_addr:
+ 193 00B2 00 00	    .word   GREEN_SCALE
+ 194           	
+ 195           	warning_time_addr:
+ 196 00B4 2C 01	    .word   WARNING_TIME
+ 197           	
+ 198           	critical_time_addr:
+ 199 00B6 96 00	    .word   CRITICAL_TIME
+ 200           	
+ 201           	;Dados globais do programa iniciados e não iniciadas(só precisam de alocar espaço)
+ 202           	 
+ 203           		.data
+ 204           	
+ 205           	color_histogram:
+ 206 00B8 00   	    .space 3
+ 206 00B9 00
+ 206 00BA 00
+ 207 00BB 00  	    .align 1
+ 208           	
+ 209           	times:
+ 210          	    .word 65535, 500, 301, 300, 299, 151, 150, 149, 1, 0
+ 210 00BC FF FF F4 01 2D 01 2C 01 2B 01 97 00 96 00 95 00
+ 210 00CC 01 00 00 00
+ 211           	
+ 212           	;Stack: pilha com dados temporários
+ 213           	
+ 214          		.equ STACK_SIZE, 64
+ 215           		.section .stack
+ 216 00D0 00   		.space STACK_SIZE
+ 216 .... ..
+ 216 010F 00
+ 217           	stack_top:
+ 218           	
+ 218           	

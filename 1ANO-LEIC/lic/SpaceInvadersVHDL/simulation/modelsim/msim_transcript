@@ -1,0 +1,74 @@
+# Reading C:/intelFPGA_lite/19.1/modelsim_ase/tcl/vsim/pref.tcl
+# do Avaliacao_intercalar1_run_msim_rtl_vhdl.do
+# if {[file exists rtl_work]} {
+# 	vdel -lib rtl_work -all
+# }
+# vlib rtl_work
+# vmap work rtl_work
+# Model Technology ModelSim - Intel FPGA Edition vmap 10.5b Lib Mapping Utility 2016.10 Oct  5 2016
+# vmap work rtl_work 
+# Copying C:/intelFPGA_lite/19.1/modelsim_ase/win32aloem/../modelsim.ini to modelsim.ini
+# Modifying modelsim.ini
+# 
+# vcom -93 -work work {C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/FFD.vhd}
+# Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 11:41:29 on May 17,2024
+# vcom -reportprogress 300 -93 -work work C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/FFD.vhd 
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Compiling entity FFD
+# -- Compiling architecture logicFunction of FFD
+# End time: 11:41:29 on May 17,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vcom -93 -work work {C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/Shift_Register_7bits.vhd}
+# Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 11:41:29 on May 17,2024
+# vcom -reportprogress 300 -93 -work work C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/Shift_Register_7bits.vhd 
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Compiling entity Shift_Register_7bits
+# -- Compiling architecture ARQ_Shift_Register_7bits of Shift_Register_7bits
+# End time: 11:41:29 on May 17,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+vcom -reportprogress 300 -work work {C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/Shift_Register_7bits_tb.vhd}
+# Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 11:48:03 on May 17,2024
+# vcom -reportprogress 300 -work work C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/Shift_Register_7bits_tb.vhd 
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Compiling entity Shift_Register_7bits_tb
+# -- Compiling architecture behavioral of Shift_Register_7bits_tb
+# ** Warning: C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/Shift_Register_7bits_tb.vhd(23): (vcom-1207) An abstract literal and an identifier must have a separator between them.
+# End time: 11:48:03 on May 17,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+vcom -reportprogress 300 -work work {C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/Shift_Register_7bits_tb.vhd}
+# Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 11:48:04 on May 17,2024
+# vcom -reportprogress 300 -work work C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/Shift_Register_7bits_tb.vhd 
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Compiling entity Shift_Register_7bits_tb
+# -- Compiling architecture behavioral of Shift_Register_7bits_tb
+# ** Warning: C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/Shift_Register_7bits_tb.vhd(23): (vcom-1207) An abstract literal and an identifier must have a separator between them.
+# End time: 11:48:04 on May 17,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+vsim work.shift_register_7bits_tb
+# vsim work.shift_register_7bits_tb 
+# Start time: 11:48:11 on May 17,2024
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading work.shift_register_7bits_tb(behavioral)
+# Loading work.shift_register_7bits(arq_shift_register_7bits)
+# Loading work.ffd(logicfunction)
+add wave -position insertpoint sim:/shift_register_7bits_tb/*
+run -all
+# Break key hit
+# Break in Architecture logicFunction at C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/FFD.vhd line 19
+# End time: 12:19:34 on May 17,2024, Elapsed time: 0:31:23
+# Errors: 0, Warnings: 0

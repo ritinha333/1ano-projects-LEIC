@@ -1,0 +1,39 @@
+P16 assembler v1.5 (Feb  9 2024)	c:\uni\LEIC 2 ANO\2semestre\AC\labs_code\Computer-Architecture-Class\lab02_R.lst	Wed Apr 10 12:33:42 2024
+
+Sections
+Index   Name            Address   Size
+0       .text           0000      000C 12
+1       .data           000C      0004 4
+
+Symbols
+Name                    Type      Value       Section
+loop                    LABEL     0002 2      .text
+var1                    LABEL     000C 12     .data
+var2                    LABEL     000D 13     .data
+var2_addr               LABEL     000A 10     .text
+var3                    LABEL     000E 14     .data
+
+Code listing
+   1           	.text
+   2 0000 40 0C	    ldr r0, var2_addr
+   3           	
+   4           	loop:
+   5           	
+   6 0002 01 08	    ldrb r1, [ r0, # 0 ]
+   7 0004 91 A0	    add r1, r1, # 1
+   8 0006 01 28	    strb r1, [ r0, # 0 ]
+   9 0008 FC 5B	    b loop
+  10           	
+  11           	var2_addr:
+  12 000A 0D 00	    .word var2
+  13           	
+  14           	.data
+  15           	    var1:
+  16 000C AC	    .byte 0xAC
+  17           	    
+  18           	    var2:
+  19 000D 7E	    .byte 126
+  20           	    
+  21           	    var3:
+  22 000E 22 20	    .word 0x2022
+  22           	

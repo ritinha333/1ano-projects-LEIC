@@ -1,0 +1,49 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/Users/ritam/OneDrive/Ambiente de Trabalho/LEIC 2 ANO/2semestre/LIC/LSD/test/simulation/modelsim
+Etests
+Z1 w1708771090
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+R0
+Z4 8C:/Users/ritam/OneDrive/Ambiente de Trabalho/LEIC 2 ANO/2semestre/LIC/LSD/test/tests.vhd
+Z5 FC:/Users/ritam/OneDrive/Ambiente de Trabalho/LEIC 2 ANO/2semestre/LIC/LSD/test/tests.vhd
+l0
+L4
+V7G7iZP5DSc_nMc`XK2jfl2
+!s100 >Zho[_l;HUDY<FdfH=k3S3
+Z6 OV;C;10.5b;63
+31
+Z7 !s110 1708771588
+!i10b 1
+Z8 !s108 1708771588.000000
+Z9 !s90 -reportprogress|300|-93|-work|work|C:/Users/ritam/OneDrive/Ambiente de Trabalho/LEIC 2 ANO/2semestre/LIC/LSD/test/tests.vhd|
+Z10 !s107 C:/Users/ritam/OneDrive/Ambiente de Trabalho/LEIC 2 ANO/2semestre/LIC/LSD/test/tests.vhd|
+!i113 1
+Z11 o-93 -work work
+Z12 tExplicit 1 CvgOpt 0
+Alogicfunction
+R2
+R3
+DEx4 work 5 tests 0 22 7G7iZP5DSc_nMc`XK2jfl2
+l13
+L11
+VHd[<4=^QgID63AE7`05FH2
+!s100 I_TEB]49c<`Uk2c<;MbJT0
+R6
+31
+R7
+!i10b 1
+R8
+R9
+R10
+!i113 1
+R11
+R12

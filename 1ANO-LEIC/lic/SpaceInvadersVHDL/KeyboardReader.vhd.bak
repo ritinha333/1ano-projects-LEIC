@@ -1,0 +1,42 @@
+LIBRARY IEEE;
+use IEEE.std_logic_1164.all;
+
+entity KeyboardReader is
+port(
+R: in std_logic; --Reset
+CLK : in std_logic;
+ACK: in std_logic;
+Lines: in std_logic_vector(3 downto 0);
+Collumns: out std_logic_vector(2 downto 0);
+D_val: out std_logic;
+D: out std_logic_vector(3 downto 0)
+);
+end KeyboardReader;
+
+architecture arq_KeyboardReader of KeyboardReader is
+
+component Key_Decode
+PORT (
+R: in std_logic; 
+CLK : in std_logic;
+K_ack: in std_logic;
+Lines: in std_logic_vector(3 downto 0);
+Collumns: out std_logic_vector(2 downto 0);
+K_val: out std_logic;
+K: out std_logic_vector(3 downto 0)
+);
+end component;
+
+begin
+
+KEY_Decode_INST0: Key_Decode port map(
+	R => R,
+	CLK => CLK,
+	K_ack => ACK,
+	Lines => Lines,
+	Collumns => Collumns,
+	K_val => D_val,
+	K => D
+);
+
+end arq_KeyboardReader;

@@ -1,0 +1,87 @@
+
+    Uma instrução é composta por um opcode e a codificação dos operandos.
+    Opcode é o código que distingue cada instrução pela sua função, isto é, identifica a instrução permitindo definir as
+    ações que são realizadas na execução da instrução.
+    A codificação dos operandos difere de acordo o tipo de operação, e a quantidade de operandos necessários.
+    A dimensão do opcode depende do número de operações suportadas pelo processador
+    Dependendo do tipo de processador as instruções podem ter comprimento variável(arquitecturas CISC) ou comprimento fixo(arquitecturas RISC)
+
+    Características do P16:
+    - Processador de 16 bits
+    - Segue a arquitectura RISC
+    - Load/Store Architecture
+    - Tem 16 registos (logo na codificação de isntruções serão necessários 4 bits para distinguir os 16 registos)
+    - A ALU é a 16 bits
+    - Tem disponível 43 instruções:
+        - De processamento de dados, transferência de dados e controlo
+        - Permite a implementação de funções/rotinas
+        - Suporta a estrutura stack
+        - Modo de endereçamento: Baseado/indexado -> com uma base e indice, e relativo
+    - Espaço de endereçamento = 64KB -> para dados e periféricos
+    - Acessível tanto ao byte(8 bits) como à word(16bits)
+    - Suporta mecanisnmos de interrupção
+
+    Acessos a memória: -> Relativo
+    - Quando queremos aceder a um endereço de memória temos de ter a certeza de que o endereço não é inferior ao PC uma vez que este só dá saltos
+    positivos, e não negativos.
+    - Temos de também ter a certeza de que estamos a usar as instruções de acordo o seu standard.
+
+        .data
+    a: .word 0x1234
+    b: .byte 0x56
+        .text
+    ldr r0, a ; erro: endereço de a
+              ; inferior a PC
+    ldrb r1, b ; erro: não inclui versão
+               ; para acesso ao byte
+
+
+        .data
+    a: .word 0x1234
+    b: .byte 0x56
+        .text
+    ldr r0, a_addr
+    ldr r0, [r0]
+    ldr r1, b_addr
+    ldrb r1, [r1]
+    ...
+    a_addr: .word a
+    b_addr: .word b
+
+
+    Acessos a memória: -> Baseado e indexado
+    - Quando é feito o acesso a memória, no caso do LDRB é ao byte, e este não poderá ser feito com um indice direto. Teríamos de alocar esse valor 
+    imediato em memória e passá-lo como indice.
+    LDRB Rd, [Rn, #immed3]  ;Rd = mem[Rn + immed3]
+    STRB Rs, [Rn, #immed3]  ;mem[Rn + immed3] = Rs
+    - Quando feito tanto o load como o store, apenas valores imediatos a 16 bits 
+
+    Instruções de salto:
+    - PC = PC + immed10 * 2 
+    - immed10 pertence ao intervalo [-512, +511] em words.
+    - b label => faz um salto de acordo o número de bits ao qaul está codificada a label
+
+    Constantes a 16 bits:
+    - MOV Rd, #immed8       ;Rd(0..7) = immed8, Rd(8..15) = 0
+    - MOV Rd, #immed8       ;Rd(0..7) = Rd(0..7), Rd(8..15) = immed8
+    - Examples:
+        mov r0, #1234     ;erro pois não está codificado a 8 bits
+
+        mov r0, #0x34       ;r0= 0x0034
+        movt r0, #0x12      ;r0= 0x1234
+
+        ou
+
+        ldr r0, Const1234
+        b   .
+
+        Const1234: 
+            .word 0x1234
+
+    
+    
+    
+
+
+
+

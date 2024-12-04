@@ -1,0 +1,225 @@
+P16 assembler v1.5 (Feb  9 2024)	c:\uni\LEIC 2 ANO\2semestre\AC\labs_code\Computer-Architecture-Class\Labs_code\lab03_solution_p8.lst	Tue May 07 14:04:53 2024
+
+Sections
+Index   Name            Address   Size
+0       startup         0000      000E 14
+1       .text           000E      0088 136
+2       .data           0096      000A 10
+3       .stack          00A0      0040 64
+
+Symbols
+Name                    Type      Value       Section
+APP_ON_MASK             ABSOLUTE  0080 128    startup
+blink_ena_last          LABEL     009E 158    .data
+blink_ena_last_addr     LABEL     0072 114    .text
+BLINK_ENA_MASK          ABSOLUTE  0080 128    startup
+BLINK_MASK              ABSOLUTE  0001 1      startup
+blink_mode              LABEL     009F 159    .data
+blink_mode_addr         LABEL     005A 90     .text
+detect_falling_edge     LABEL     005C 92     .text
+detect_falling_edge_l0  LABEL     006E 110    .text
+INPORT_ADDRESS          ABSOLUTE  FF80 65408  startup
+inport_read             LABEL     0074 116    .text
+line#31                 LABEL     0008 8      startup
+loop                    LABEL     0020 32     .text
+main                    LABEL     000E 14     .text
+main_addr               LABEL     000C 12     startup
+main_l0                 LABEL     0034 52     .text
+OUTPORT_ADDRESS         ABSOLUTE  FFC0 65472  startup
+outport_write           LABEL     007C 124    .text
+sleep                   LABEL     0084 132    .text
+sleep_end               LABEL     0094 148    .text
+sleep_inner_loop        LABEL     008C 140    .text
+sleep_outer_loop        LABEL     0088 136    .text
+STACK_SIZE              ABSOLUTE  0040 64     startup
+stack_top               LABEL     00E0 224    .stack
+stack_top_addr          LABEL     000A 10     startup
+times                   LABEL     0096 150    .data
+times_addr              LABEL     0058 88     .text
+TIMES_MASK              ABSOLUTE  0007 7      startup
+TIMES_POS               ABSOLUTE  0000 0      startup
+
+Code listing
+   1           	; Ficheiro:  lab03.S
+   2           	; Descricao: Programa para a realização da 3a atividade laboratorial de
+   3           	;            Arquitetura de Computadores.
+   4           	; Autor:     Tiago M Dias (tiago.dias@isel.pt)
+   5           	; Data:      18-04-2024
+   6           	
+   7           	; Definicao dos valores dos simbolos utilizados no programa
+   8           	;
+   9          		.equ	STACK_SIZE, 64                ; Dimensao do stack
+  10           	
+  11           	; *** Início de zona para completar ***
+  12          		.equ	INPORT_ADDRESS, 		0xFF80 
+  13          		.equ	OUTPORT_ADDRESS,		0xFFC0
+  14           	; *** Final de zona para completar  ***
+  15           	; Constantes relacionadas com o porto de entrada
+  16          		.equ	TIMES_MASK, 			0x7
+  17          		.equ	TIMES_POS,				0
+  18          		.equ	BLINK_ENA_MASK,		0x80
+  19           	; Constantes relacionadas com o porto de saída
+  20          		.equ	APP_ON_MASK, 			0x80
+  21          		.equ	BLINK_MASK, 			1
+  22           	
+  23           	; Seccao:    startup
+  24           	; Descricao: Guarda o código de arranque do sistema
+  25           	;
+  26           		.section startup
+  27 0000 4D 0C		ldr	sp, stack_top_addr
+  28 0002 80 B7	    mov r0, pc
+  29 0004 0E A2	    add lr, r0, #4
+  30 0006 2F 0C		ldr	pc, main_addr
+  31 0008 FF 5B	    b   .
+  32           	
+  33           	stack_top_addr:
+  34 000A E0 00		.word	stack_top
+  35           	main_addr:
+  36 000C 0E 00		.word	main
+  37           	
+  38           	; Seccao:    text
+  39           	; Descricao: Guarda o código do programa
+  40           	;
+  41           		.text
+  42           	
+  43           	; Rotina:    main
+  44           	; Descricao: Pisca um led do porto de saída a um ritmo estabelecido por três bits do porto de entrada. A ação de pisca é controlada por um bit do porto de entrada (transita modo pisca, apagado, por cada transição de OFF para ON do bit do porto de entrada). Pisca com modo pisca a 1; apaga com modo pisca a 0. Um bit do porto de saída é colocado a 1 indicando que a aplicação está em execução.
+  45           	; Entradas:  
+  46           	; Saidas:    
+  47           	; Efeitos:   
+  48           	main:
+  49 000E 0E 24		push	lr
+  50 0010 04 24		push	r4						; Guarda tempo de pisca
+  51           		; Inicia porto de saída, blink_ena_last e blink_mode
+  52 0012 00 68		mov		r0, #APP_ON_MASK
+  53 0014 33 5C		bl		outport_write
+  54 0016 D0 0E		ldr		r0, blink_ena_last_addr
+  55 0018 01 60		mov		r1, #0
+  56 001A 01 28		strb	r1, [r0]
+  57 001C E0 0D		ldr		r0, blink_mode_addr
+  58 001E 01 28		strb	r1, [r0]
+  59           	loop:
+  60 0020 29 5C		bl		inport_read
+  61 0022 04 B0		mov		r4, r0					; Guarda temporariamente imagem do porto de entrada
+  62 0024 1B 5C		bl		detect_falling_edge
+  63 0026 00 C0		and 	r0, r0, r0				; Flag Z afetada de acordo com o retorno de detect_falling_edge
+  64 0028 80 0D		ldr		r0, blink_mode_addr
+  65 002A 01 08		ldrb	r1, [r0]				; R1 = modo pisca
+  66 002C 03 40		bzs		main_l0				; Alterna modo de pisca se deteta transição de OFF para ON
+  67 002E 12 60		mov		r2, #1					
+  68 0030 11 D1		eor		r1, r1, r2
+  69 0032 01 28		strb	r1, [r0]
+  70           	main_l0:
+  71 0034 91 C0		and		r1, r1, r1				
+  72 0036 F4 43		bzs		loop					; Mantém apagado se modo pisca igual a 0
+  73 0038 70 60		mov		r0, #TIMES_MASK
+  74 003A 40 C0		and		r0, r4, r0				; Filtra os 3 bits do índice times
+  75 003C 00 E0		lsl		r0, r0, #TIMES_POS		; e coloca-os nos bits de menor peso (para a localização deste exercício é redundante)
+  76 003E C1 0C		ldr		r1, times_addr			; Obtém endereço base de array times
+  77 0040 14 18		ldrb	r4, [r1, r0]			; Obtém tempo de pisca e preserva em registo Callee Saved Register (segundo as convenções é preservado com a chamada de outras funções)
+  78 0042 10 68		mov		r0, #APP_ON_MASK + BLINK_MASK
+  79 0044 1B 5C		bl		outport_write			; Coloca led Blink aceso + led APP ON
+  80 0046 00 B2		mov		r0, r4
+  81 0048 1D 5C		bl		sleep					; Aguarda led aceso no tempo estabelecido
+  82 004A 00 68		mov		r0, #APP_ON_MASK
+  83 004C 17 5C		bl 		outport_write			; Coloca led blink apagado + led APP ON
+  84 004E 00 B2		mov		r0, r4
+  85 0050 19 5C		bl		sleep					; Aguarda led apagado no tempo estabelecido
+  86 0052 E6 5B		b		loop
+  87 0054 04 04		pop		r4
+  88 0056 0F 04		pop		pc
+  89           		
+  90           	times_addr:
+  91 0058 96 00		.word	times
+  92           	blink_mode_addr:
+  93 005A 9F 00		.word	blink_mode
+  94           	
+  95           	/*
+  96           	uint8_t detect_falling_edge(uint8_t inport_val) {
+  97           		uint8_t domain_now = (inport_val & MASK_DOMAIN) >> POS_DOMAIN;
+  98           		uint8_t falling_edge = domain_last == 1 && domain_now == 0;
+  99           		domain_last = domain_now;
+ 100           		return falling_edge;
+ 101           	}
+ 102           	*/
+ 103           	detect_falling_edge:
+ 104           		; uint8_t blink_ena_now = (inport_val & BLINK_ENA_MASK) >> BLINK_ENA_POS;
+ 105 005C 01 68		mov		r1, #BLINK_ENA_MASK
+ 106 005E 81 C0		and		r1, r0, r1				; R1 = blink_ena_now
+ 107 0060 00 60		mov		r0, #0					; falling_edge = FALSE
+ 108           		; uint8_t falling_edge = blink_ena_last == 1 && blink_ena_now == 0;
+ 109 0062 72 0C		ldr		r2, blink_ena_last_addr
+ 110 0064 04 44		bzc		detect_falling_edge_l0 ; blink_ena_now == 0
+ 111 0066 23 08		ldrb	r3, [r2]				; R3 = blink_ena_last
+ 112 0068 B3 C1		and		r3, r3, r3
+ 113 006A 01 40		bzs		detect_falling_edge_l0 ; blink_ena_last == 1
+ 114 006C 10 60		mov		r0, #1					; falling_edge = TRUE
+ 115           	detect_falling_edge_l0:
+ 116 006E 21 28		strb	r1, [r2]
+ 117 0070 0F B7		mov		pc, lr					; return falling_edge
+ 118           		
+ 119           	blink_ena_last_addr:
+ 120 0072 9E 00		.word	blink_ena_last
+ 121           		
+ 122           	; Rotina:    inport_read
+ 123           	; Descricao: *** Para completar ***
+ 124           	; Entradas:  -
+ 125           	; Saidas:    r0 - *** Para completar ***
+ 126           	; Efeitos:   r1 - *** Para completar ***
+ 127           	inport_read:
+ 128 0074 01 68		mov		r1, #INPORT_ADDRESS & 0xFF
+ 129 0076 F1 7F		movt	r1, #INPORT_ADDRESS >> 8 & 0xFF
+ 130 0078 10 08		ldrb	r0, [r1, #0]
+ 131 007A 0F B7		mov		pc, lr
+ 132           	
+ 133           	; Rotina:    outport_write
+ 134           	; Descricao: *** Para completar ***
+ 135           	; Entradas:  r0 - *** Para completar ***
+ 136           	; Saidas:    -
+ 137           	; Efeitos:   r1 - *** Para completar ***
+ 138           	outport_write:
+ 139 007C 01 6C		mov		r1, #OUTPORT_ADDRESS & 0xFF
+ 140 007E F1 7F		movt	r1, #OUTPORT_ADDRESS >> 8 & 0xFF
+ 141 0080 10 28		strb	r0, [r1, #0]
+ 142 0082 0F B7		mov		pc, lr
+ 143           	
+ 144           	; Rotina:    sleep
+ 145           	; Descricao: *** Para completar ***
+ 146           	; Entradas:  *** Para completar ***
+ 147           	; Saidas:    *** Para completar ***
+ 148           	; Efeitos:   *** Para completar ***
+ 149           	sleep:
+ 150 0084 00 C0		and	r0, r0, r0
+ 151 0086 06 40		beq	sleep_end
+ 152           	sleep_outer_loop:
+ 153 0088 E1 63		mov	r1, #0x3E
+ 154 008A 31 70		movt	r1, #0x03
+ 155           	sleep_inner_loop:
+ 156 008C 91 A8		sub	r1, r1, #1
+ 157 008E FE 47		bne	sleep_inner_loop
+ 158 0090 80 A8		sub	r0, r0, #1
+ 159 0092 FA 47		bne	sleep_outer_loop
+ 160           	sleep_end:
+ 161 0094 0F B7		mov	pc, lr
+ 162           	
+ 163           	; Seccao:    data
+ 164           	; Descricao: Guarda as variáveis globais
+ 165           	;
+ 166           		.data
+ 167           	times:
+ 168          		.byte	5, 10, 15, 20, 25, 30, 35, 40
+ 168 0096 05 0A 0F 14 19 1E 23 28
+ 169           	blink_ena_last:
+ 170 009E 00   		.space	1
+ 171           	blink_mode:
+ 172 009F 00   		.space	1
+ 173           	
+ 174           	; Seccao:    stack
+ 175           	; Descricao: Implementa a pilha com o tamanho definido pelo simbolo STACK_SIZE
+ 176           	;
+ 177           		.stack
+ 178 00A0 00   		.space	STACK_SIZE
+ 178 .... ..
+ 178 00DF 00
+ 179           	stack_top:
+ 179           	

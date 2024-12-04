@@ -1,0 +1,111 @@
+|Shift_Register_7bits
+Sin => FFD:U0.D
+S_PL => ~NO_FANOUT~
+enableShift => FFD:U0.EN
+enableShift => FFD:U1.EN
+enableShift => FFD:U2.EN
+enableShift => FFD:U3.EN
+enableShift => FFD:U4.EN
+enableShift => FFD:U5.EN
+enableShift => FFD:U6.EN
+clr => FFD:U0.RESET
+clr => FFD:U1.RESET
+clr => FFD:U2.RESET
+clr => FFD:U3.RESET
+clr => FFD:U4.RESET
+clr => FFD:U5.RESET
+clr => FFD:U6.RESET
+clk => FFD:U0.CLK
+clk => FFD:U1.CLK
+clk => FFD:U2.CLK
+clk => FFD:U3.CLK
+clk => FFD:U4.CLK
+clk => FFD:U5.CLK
+clk => FFD:U6.CLK
+D[0] => ~NO_FANOUT~
+D[1] => ~NO_FANOUT~
+D[2] => ~NO_FANOUT~
+D[3] => ~NO_FANOUT~
+D[4] => ~NO_FANOUT~
+D[5] => ~NO_FANOUT~
+D[6] => ~NO_FANOUT~
+Sout <= FFD:U6.Q
+Q[0] <= FFD:U6.Q
+Q[1] <= FFD:U5.Q
+Q[2] <= FFD:U4.Q
+Q[3] <= FFD:U3.Q
+Q[4] <= FFD:U2.Q
+Q[5] <= FFD:U1.Q
+Q[6] <= FFD:U0.Q
+
+
+|Shift_Register_7bits|FFD:U0
+CLK => Q~reg0.CLK
+RESET => Q~reg0.ACLR
+RESET => Q.IN0
+SET => Q.IN1
+D => Q~reg0.DATAIN
+EN => Q~reg0.ENA
+Q <= Q~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|Shift_Register_7bits|FFD:U1
+CLK => Q~reg0.CLK
+RESET => Q~reg0.ACLR
+RESET => Q.IN0
+SET => Q.IN1
+D => Q~reg0.DATAIN
+EN => Q~reg0.ENA
+Q <= Q~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|Shift_Register_7bits|FFD:U2
+CLK => Q~reg0.CLK
+RESET => Q~reg0.ACLR
+RESET => Q.IN0
+SET => Q.IN1
+D => Q~reg0.DATAIN
+EN => Q~reg0.ENA
+Q <= Q~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|Shift_Register_7bits|FFD:U3
+CLK => Q~reg0.CLK
+RESET => Q~reg0.ACLR
+RESET => Q.IN0
+SET => Q.IN1
+D => Q~reg0.DATAIN
+EN => Q~reg0.ENA
+Q <= Q~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|Shift_Register_7bits|FFD:U4
+CLK => Q~reg0.CLK
+RESET => Q~reg0.ACLR
+RESET => Q.IN0
+SET => Q.IN1
+D => Q~reg0.DATAIN
+EN => Q~reg0.ENA
+Q <= Q~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|Shift_Register_7bits|FFD:U5
+CLK => Q~reg0.CLK
+RESET => Q~reg0.ACLR
+RESET => Q.IN0
+SET => Q.IN1
+D => Q~reg0.DATAIN
+EN => Q~reg0.ENA
+Q <= Q~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+
+|Shift_Register_7bits|FFD:U6
+CLK => Q~reg0.CLK
+RESET => Q~reg0.ACLR
+RESET => Q.IN0
+SET => Q.IN1
+D => Q~reg0.DATAIN
+EN => Q~reg0.ENA
+Q <= Q~reg0.DB_MAX_OUTPUT_PORT_TYPE
+
+

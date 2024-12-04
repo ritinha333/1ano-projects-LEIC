@@ -1,0 +1,27 @@
+entity priority_encoder is
+    port (
+        input_vector: in std_logic_vector(3 downto 0);
+        output_vector: out std_logic_vector(1 downto 0)
+    );
+end entity priority_encoder;
+
+architecture Behavioral of priority_encoder is
+begin
+    process(input_vector)
+    begin
+        case input_vector is
+            when "0000" =>
+                output_vector <= "11"; -- No input active
+            when "0001" =>
+                output_vector <= "10"; -- Input 0 active
+            when "0010" =>
+                output_vector <= "01"; -- Input 1 active
+            when "0100" =>
+                output_vector <= "01"; -- Input 2 active
+            when "1000" =>
+                output_vector <= "01"; -- Input 3 active
+            when others =>
+                output_vector <= "00"; -- Multiple inputs active, choose the highest priority
+        end case;
+    end process;
+end architecture Behavioral;

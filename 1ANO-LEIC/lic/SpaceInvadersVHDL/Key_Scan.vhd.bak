@@ -1,0 +1,87 @@
+LIBRARY IEEE;
+use IEEE.std_logic_1164.all;
+
+entity Key_Scan is
+port(
+R: in std_logic;
+CLK : in std_logic;
+K_scan: in std_logic;
+Lines: in std_logic_vector(3 downto 0);
+Collumns: out std_logic_vector(2 downto 0);
+K_press: out std_logic;
+K: out std_logic_vector(3 downto 0)
+);
+end Key_Scan;
+
+architecture arq_Key_Scan of Key_Scan is
+
+component CLKDIV is
+port (
+clk_in: in std_logic;
+clk_out: out std_logic
+);
+end component;
+
+component Mux42
+PORT ( 
+K : in STD_LOGIC_VECTOR(3 downto 0);
+S : in std_logic_vector(1 downto 0);
+Y : out STD_LOGIC
+);
+end component;
+
+component Decoder
+PORT ( 
+S : in std_logic_vector(1 downto 0);
+C : out STD_LOGIC_VECTOR(2 downto 0)
+);
+end component;
+
+component Counter
+PORT (
+R: in std_logic;
+PL: in std_logic; 										-- Parallel Load;
+CE: in std_logic; 										-- Count Enable;
+CLK: in std_logic;
+Q: out std_logic_vector(3 downto 0);
+TC: out std_logic 	
+);
+
+end component;
+
+signal s_clkdiv, s_mux, s_tc: std_logic:='0';
+signal sq_counter: std_logic_vector(3 downto 0):="0000";
+
+begin
+
+CLK_Inst0: clkDIV port map (
+clk_in => CLK,
+clk_out => s_clkdiv
+);
+
+COUNTER_Inst0: Counter port map (
+	R => R,
+ 	PL => s_tc,
+	CE => K_scan,
+	CLK => CLK,
+	TC => s_tc,
+	Q => sq_counter
+);
+
+MUX_INST0: Mux42 port map(
+	K => Lines, 
+	S(0) => sq_counter(0), 
+	S(1) => sq_counter(1), 
+	Y => s_mux
+);
+
+DECODER_INST0: Decoder port map(
+	S(0) => sq_counter(2),
+	S(1) => sq_counter(3),
+	C => Collumns
+);
+
+K_press <= not(s_mux);
+K <= sq_counter;
+
+end arq_Key_Scan;

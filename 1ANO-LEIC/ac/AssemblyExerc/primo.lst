@@ -1,0 +1,181 @@
+P16 assembler v1.5 (Feb  9 2024)	c:\Users\gonca\OneDrive\Documentos\Licenciatura\Arquitetura_de_Computadores\SV_23_24\labs\ComputerArchProj\AssemblyExerc\primo.lst	Thu Mar 14 22:47:18 2024
+
+Sections
+Index   Name            Address   Size
+0       .startup        0000      0012 18
+1       .text           0012      005C 92
+2       .data           006E      000A 10
+3       .stack          0078      0040 64
+
+Symbols
+Name                    Type      Value       Section
+_start                  LABEL     0004 4      .startup
+line#114                LABEL     0062 98     .text
+line#15                 LABEL     000C 12     .startup
+line#9                  LABEL     0002 2      .startup
+main                    LABEL     0012 18     .text
+main_addr               LABEL     0010 16     .startup
+n1                      LABEL     006E 110    .data
+n1_addr                 LABEL     001C 28     .text
+primo                   LABEL     001E 30     .text
+primo_body              LABEL     0030 48     .text
+primo_body_for          LABEL     003A 58     .text
+primo_body_for_end      LABEL     0056 86     .text
+primo_body_for_if       LABEL     0040 64     .text
+primo_body_for_if_end   LABEL     004E 78     .text
+primo_body_for_update   LABEL     0052 82     .text
+primo_end               LABEL     005A 90     .text
+resto                   LABEL     0064 100    .text
+resto_end               LABEL     006C 108    .text
+SIZE                    ABSOLUTE  0005 5      .startup
+STACK_SIZE              ABSOLUTE  00AE 174    .data
+stack_top               LABEL     00B8 184    .stack
+stack_top_addr          LABEL     000E 14     .startup
+
+Code listing
+   1           	/* Secção de arranque: código de inicialização
+   2           	 * 1. Estabelece vetores (entry point após reset e de interrupção)
+   3           	 * 2. Inicia stack pointer
+   4           	 * 3. Chama main
+   5           	 * 4. Retém a execução do CPU após o retorno do main
+   6           	 */
+   7           		.section .startup
+   8 0000 01 58		b		_start
+   9 0002 FF 5B		b 		.
+  10           	_start:
+  11 0004 4D 0C		ldr		sp, stack_top_addr
+  12 0006 80 B7		mov		r0, pc
+  13 0008 0E A2		add		lr, r0, #4
+  14 000A 2F 0C		ldr		pc, main_addr
+  15 000C FF 5B		b 		.	
+  16           	stack_top_addr:
+  17 000E B8 00		.word stack_top
+  18           	main_addr:
+  19 0010 12 00		.word	main
+  20           		
+  21           	;Constantes
+  22          		.equ	SIZE, 5
+  23           	/* Secção com código aplicacional (programa)
+  24           	 */
+  25           		.text
+  26           	main:
+  27           		; salva LR se função não folha
+  28 0012 0E 24		push	lr
+  29 0014 30 0C		ldr		r0, n1_addr
+  30 0016 A1 60		mov		r1, #SIZE * 2
+  31 0018 02 5C		bl 		primo
+  32           		; retorna desempilhando endereço de retorno se função não folha
+  33 001A 0F 04		pop		pc
+  34           		; retorna transferindo LR para PC se função folha
+  35           		;mov		pc, lr
+  36           	
+  37           	n1_addr:
+  38 001C 6E 00		.word 	n1
+  39           	
+  40           	/*
+  41           	int ehPrimo(int n) {
+  42           	    if (n <= 1)    return 0;
+  43           	    for (int i = 2; i <= n / 2; i++) {
+  44           	        if (n % i == 0)
+  45           	            return 0;
+  46           	    }
+  47           	    return 1;
+  48           	}*/
+  49           	
+  50           	;   input: r0 = n
+  51           	;   output: r0 = primo(n)
+  52           	primo:
+  53           	    ; prólogo
+  54 001E 0E 24	    push    lr
+  55 0020 04 24	    push    r4      ; n
+  56 0022 05 24	    push    r5      ; i
+  57 0024 06 24	    push    r6      ; n/2
+  58           	
+  59 0026 A0 60		mov		r0, #10
+  60           	
+  61           	    ; iniciação de variáveis locais
+  62 0028 04 B0	    mov     r4, r0  	; r4 = n
+  63 002A 25 60	    mov     r5, #2  	; i = 2
+  64 002C 86 E8	    lsr     r6, r0, #1	; r6 = n/2
+  65           	
+  66           		;corpo da função
+  67 002E 00 58		b		primo_body
+  68           	
+  69           	;	if (n <= 1) return 0;
+  70           	primo_body:
+  71 0030 10 60		mov		r0, #1
+  72 0032 00 BA		cmp 	r0, r4
+  73 0034 02 48		bhs  	primo_body_for		; n > 1
+  74 0036 00 60		mov 	r0, #0
+  75 0038 10 58		b		primo_end
+  76           	/*
+  77           		for (int i = 2; i <= n/2; i++) {
+  78           	        if (n % i == 0)
+  79           	            return 0;
+  80           	    }
+  81           	    return 1;
+  82           	*/
+  83           	primo_body_for:
+  84 003A E0 BA		cmp r6, r5					; i > n/2
+  85 003C 0C 48		bhs primo_body_for_end
+  86 003E 00 58		b	primo_body_for_if
+  87           	
+  88           	primo_body_for_if:	
+  89 0040 00 B2		mov r0, r4
+  90 0042 81 B2		mov r1, r5
+  91 0044 0F 5C		bl	resto	; IN: r0 e r1, OUT: r0, r0 % r1 = r0	
+  92 0046 01 60		mov r1, #0		
+  93 0048 80 B8		cmp r0, r1
+  94 004A 01 40		bzs primo_body_for_if_end	; n % i == 0 
+  95 004C 02 58		b	primo_body_for_update
+  96           	
+  97           	primo_body_for_if_end:
+  98 004E 00 60		mov r0, #0
+  99 0050 04 58		b	primo_end
+ 100           	
+ 101           	primo_body_for_update:
+ 102 0052 D5 A0		add r5, r5, #1
+ 103 0054 F2 5B		b	primo_body_for
+ 104           	
+ 105           	primo_body_for_end:
+ 106 0056 10 60		mov r0, #1
+ 107 0058 00 58		b	primo_end
+ 108           	
+ 109           	primo_end:
+ 110 005A 06 04	    pop     r6
+ 111 005C 05 04	    pop     r5
+ 112 005E 04 04	    pop     r4
+ 113 0060 0E 04	    pop     lr
+ 114 0062 FF 5B		b		.
+ 115           	
+ 116           	/*
+ 117           	INPUT: R0, R1
+ 118           	OUTPUT: R0
+ 119           	R0 % R1 = R0
+ 120           	*/
+ 121           	resto:
+ 122 0064 80 B8		cmp r0, r1 
+ 123 0066 02 48		bhs resto_end 
+ 124 0068 80 88		sub r0, r0, r1
+ 125 006A FC 5B		b	resto
+ 126           	resto_end:
+ 127 006C 0F B7		mov pc, lr 
+ 128           	
+ 129           	/* Dados globais do programa iniciados
+ 130           	 */ 
+ 131           		.data
+ 132           	n1:
+ 133 006E 00   		.space	SIZE * 2
+ 133 .... ..
+ 133 0077 00
+ 134           	
+ 135           	/* Stack: pilha com dados temporários
+ 136           	 */
+ 137          		.equ STACK_SIZE, 64
+ 138           		.section .stack
+ 139 0078 00   		.space STACK_SIZE
+ 139 .... ..
+ 139 00B7 00
+ 140           	stack_top:
+ 141           	
+ 141           	

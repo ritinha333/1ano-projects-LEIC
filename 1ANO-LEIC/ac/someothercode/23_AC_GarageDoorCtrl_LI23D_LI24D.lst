@@ -1,0 +1,635 @@
+P16 assembler v1.5 (Feb  9 2024)	c:\uni\LEIC 2 ANO\2semestre\AC\labs_code\Computer-Architecture-Class\23_AC_GarageDoorCtrl_LI23D_LI24D.lst	Sat May 18 19:00:51 2024
+
+Sections
+Index   Name            Address   Size
+0       .startup        0000      0014 20
+1       .text           0014      01B6 438
+2       .data           01CA      0004 4
+3       .stack          01CE      0040 64
+
+Symbols
+Name                    Type      Value       Section
+_start                  LABEL     0004 4      .startup
+ABERTO_ST               ABSOLUTE  0002 2      .startup
+abre                    LABEL     0102 258    .text
+ABREFECHA_MSK           ABSOLUTE  0002 2      .startup
+ABRIR_ST                ABSOLUTE  0004 4      .startup
+b_last                  LABEL     01CB 459    .data
+B_LAST_ADDR             LABEL     014A 330    .text
+B_MSK                   ABSOLUTE  0001 1      .startup
+B_POS                   ABSOLUTE  0000 0      .startup
+case_aberto             LABEL     004E 78     .text
+case_aberto_l0          LABEL     0062 98     .text
+case_abrir              LABEL     0082 130    .text
+case_abrir_l0           LABEL     0094 148    .text
+case_fechado            LABEL     0040 64     .text
+case_fechar             LABEL     00AA 170    .text
+case_fechar_l0          LABEL     00B6 182    .text
+case_fechar_l1          LABEL     00C4 196    .text
+case_parado_abrir       LABEL     004E 78     .text
+case_parado_fechar      LABEL     0066 102    .text
+case_parado_fechar_l0   LABEL     0074 116    .text
+cases_table             LABEL     0034 52     .text
+CPSR_BIT_I              ABSOLUTE  0010 16     .startup
+detect_falling_edge     LABEL     0136 310    .text
+detect_falling_edge_l0  LABEL     0146 326    .text
+fecha                   LABEL     010A 266    .text
+FECHADO_ST              ABSOLUTE  0000 0      .startup
+FECHAR_ST               ABSOLUTE  0006 6      .startup
+get_button              LABEL     00E2 226    .text
+get_sa                  LABEL     00EA 234    .text
+get_sf                  LABEL     00F2 242    .text
+get_so                  LABEL     00FA 250    .text
+get_time                LABEL     012C 300    .text
+get_time_ref            LABEL     012C 300    .text
+INPORT_ADDR             LABEL     0182 386    .text
+INPORT_ADDRESS          ABSOLUTE  FF80 65408  .startup
+inport_read             LABEL     017C 380    .text
+isr                     LABEL     014C 332    .text
+ISR_ADDR                LABEL     0012 18     .startup
+line#10                 LABEL     000C 12     .startup
+main                    LABEL     0014 20     .text
+MAIN_ADDR               LABEL     0010 16     .startup
+main_loop               LABEL     002A 42     .text
+ONOFF_MSK               ABSOLUTE  0001 1      .startup
+OUTPORT_ADDR            LABEL     01C8 456    .text
+OUTPORT_ADDRESS         ABSOLUTE  FFC0 65472  .startup
+outport_clear_bits      LABEL     0192 402    .text
+outport_img             LABEL     01CA 458    .data
+outport_img_addr        LABEL     01C0 448    .text
+outport_init            LABEL     01B6 438    .text
+outport_set_bits        LABEL     0184 388    .text
+outport_write           LABEL     01C2 450    .text
+outport_write_bits      LABEL     01A2 418    .text
+para                    LABEL     0114 276    .text
+PARADO_ABRIR_ST         ABSOLUTE  0008 8      .startup
+PARADO_FECHAR_ST        ABSOLUTE  000A 10     .startup
+print_state             LABEL     012C 300    .text
+PTC_ADDR                LABEL     017A 378    .text
+PTC_ADDRESS             ABSOLUTE  FF40 65344  .startup
+ptc_clr_irq             LABEL     0174 372    .text
+PTC_CMD_START           ABSOLUTE  0000 0      .startup
+PTC_CMD_STOP            ABSOLUTE  0001 1      .startup
+ptc_get_value           LABEL     016E 366    .text
+ptc_init                LABEL     014C 332    .text
+ptc_start               LABEL     015E 350    .text
+ptc_stop                LABEL     0166 358    .text
+PTC_TC                  ABSOLUTE  0004 4      .startup
+PTC_TCR                 ABSOLUTE  0000 0      .startup
+PTC_TIR                 ABSOLUTE  0006 6      .startup
+PTC_TMR                 ABSOLUTE  0002 2      .startup
+SA_MSK                  ABSOLUTE  0002 2      .startup
+SA_POS                  ABSOLUTE  0001 1      .startup
+SF_MSK                  ABSOLUTE  0004 4      .startup
+SF_POS                  ABSOLUTE  0002 2      .startup
+SO_MSK                  ABSOLUTE  0008 8      .startup
+SO_POS                  ABSOLUTE  0003 3      .startup
+STACK_SIZE              ABSOLUTE  020A 522    .data
+stack_top               LABEL     020E 526    .stack
+STACK_TOP_ADDR          LABEL     000E 14     .startup
+STATE_MSK               ABSOLUTE  00E0 224    .startup
+STATE_POS               ABSOLUTE  0005 5      .startup
+sysclk                  LABEL     01CC 460    .data
+SYSCLK_FREQ             ABSOLUTE  0063 99     .startup
+sysclk_get_ticks        LABEL     014C 332    .text
+sysclk_init             LABEL     014C 332    .text
+TIMEOUT                 ABSOLUTE  001E 30     .startup
+timeout                 LABEL     011C 284    .text
+timeout_l0              LABEL     012A 298    .text
+
+Code listing
+   1           		.section .startup
+   2           		; sec��o com c�digo de arranque
+   3 0000 01 58		b	_start
+   4 0002 7F 0C		ldr	pc, ISR_ADDR
+   5           	_start:
+   6 0004 4D 0C		ldr	sp, STACK_TOP_ADDR
+   7 0006 80 B7	    mov r0, pc
+   8 0008 0E A2	    add lr, r0, #4
+   9 000A 2F 0C		ldr	pc, MAIN_ADDR
+  10 000C FF 5B	    b   .
+  11           	
+  12           	STACK_TOP_ADDR:
+  13 000E 0E 02		.word	stack_top
+  14           	MAIN_ADDR:
+  15 0010 14 00		.word	main
+  16           	ISR_ADDR:
+  17 0012 4C 01		.word	isr
+  18           	
+  19           	/*--------------------------------------------
+  20           	 * Defini��o de constantes
+  21           	 *--------------------------------------------*/
+  22           		; Definicoes dos portos paralelos
+  23          		.equ	INPORT_ADDRESS, 	0xFF80
+  24          		.equ	OUTPORT_ADDRESS, 	0xFFC0
+  25           		
+  26           		; Definicoes do circuito pTC
+  27          		.equ	PTC_ADDRESS,  0xFF40			; Endereco do circuito pTC
+  28          		.equ	PTC_TCR, 0						; Deslocamento do registo TCR do pTC
+  29          		.equ	PTC_TMR, 2						; Deslocamento do registo TMR do pTC
+  30          		.equ	PTC_TC,  4						; Deslocamento do registo TC do pTC
+  31          		.equ	PTC_TIR, 6						; Deslocamento do registo TIR do pTC
+  32           	
+  33          		.equ	PTC_CMD_START, 0				; Comando para iniciar a contagem no pTC
+  34          		.equ	PTC_CMD_STOP, 1				; Comando para parar a contagem no pTC
+  35          		.equ	SYSCLK_FREQ, 99				; Intervalo de contagem do circuito pTC
+  36          		.equ	CPSR_BIT_I, 0b010000			; Mascara para o bit I do registo CPSR
+  37           		
+  38           		; Definicoes aplicacionais
+  39          		.equ	B_MSK, 				0x1
+  40          		.equ	SA_MSK,				0x2
+  41          		.equ	SF_MSK, 				0x4
+  42          		.equ	SO_MSK,				0x8
+  43          		.equ	B_POS,					0
+  44          		.equ	SA_POS,				1
+  45          		.equ	SF_POS,				2
+  46          		.equ	SO_POS,				3
+  47           		
+  48          		.equ	ONOFF_MSK,				0x1
+  49          		.equ	ABREFECHA_MSK,		0x2
+  50           		
+  51          		.equ	STATE_MSK,				0xE0
+  52          		.equ	STATE_POS,				5
+  53           		
+  54          		.equ	FECHADO_ST,			0
+  55          		.equ	ABERTO_ST,				2
+  56          		.equ	ABRIR_ST,				4
+  57          		.equ	FECHAR_ST,				6
+  58          		.equ	PARADO_ABRIR_ST,		8
+  59          		.equ	PARADO_FECHAR_ST,	10
+  60           		
+  61          		.equ 	TIMEOUT, 				30 ; 30 segundos (sysclk period = 1s)
+  62           		.text
+  63           		; sec��o com c�digo aplicacional
+  64           		
+  65           	/*
+  66           	uint16_t main() {
+  67           		uint8_t state = FECHAR_ST;
+  68           		for(;;) {
+  69           			uint8_t inport_img = inport_read();
+  70           			switch (state) {
+  71           			case FECHADO_ST:
+  72           				break;
+  73           			case ABERTO_ST:
+  74           				break;
+  75           			case ABRIR_ST:
+  76           				break;
+  77           			case FECHAR_ST:
+  78           				break;
+  79           			case PARADO_ABRIR_ST:
+  80           				break;
+  81           			case PARADO_FECHAR_ST:
+  82           				break;
+  83           		}
+  84           		return 0;
+  85           	}
+  86           	*/
+  87           	main:
+  88 0014 0E 24		push	lr
+  89 0016 04 24		push	r4						; state
+  90 0018 05 24		push	r5						; inport_img
+  91 001A 06 24		push	r6						; clock_ref
+  92 001C 64 60		mov		r4, #FECHAR_ST
+  93 001E 30 66		mov		r0, #SYSCLK_FREQ
+  94 0020 95 5C		bl		sysclk_init
+  95 0022 60 B0		mrs		r0, cpsr
+  96 0024 01 61		mov		r1, #CPSR_BIT_I
+  97 0026 80 C8		orr		r0, r0, r1
+  98 0028 40 B0		msr		cpsr, r0	
+  99           	main_loop:
+ 100 002A C0 E8		lsr		r0, r4, #1
+ 101 002C 7F 5C		bl		print_state
+ 102 002E A6 5C		bl		inport_read			; R0 = inport_read()
+ 103 0030 05 B0		mov		r5, r0					; R5 = inport_img
+ 104 0032 CF 87		add		pc, r4, pc
+ 105           	cases_table:
+ 106 0034 05 58		b		case_fechado
+ 107 0036 0B 58		b 		case_aberto
+ 108 0038 24 58		b 		case_abrir
+ 109 003A 37 58		b 		case_fechar
+ 110 003C 08 58		b 		case_parado_abrir
+ 111 003E 13 58		b 	 	case_parado_fechar
+ 112           	case_fechado:
+ 113 0040 80 B2		mov		r0, r5
+ 114 0042 4F 5C		bl		get_button
+ 115 0044 78 5C		bl		detect_falling_edge
+ 116 0046 00 C0		and		r0, r0, r0
+ 117 0048 F0 43		beq		main_loop
+ 118 004A 44 60		mov		r4, #ABRIR_ST
+ 119 004C EE 5B		b 		main_loop
+ 120           	case_aberto:
+ 121           	case_parado_abrir:
+ 122 004E 80 B2		mov		r0, r5
+ 123 0050 48 5C		bl		get_button
+ 124 0052 71 5C		bl		detect_falling_edge
+ 125 0054 00 C0		and		r0, r0, r0
+ 126 0056 05 44		bne		case_aberto_l0
+ 127 0058 00 B3		mov		r0, r6
+ 128 005A 68 5C		bl		get_time
+ 129 005C 5F 5C		bl		timeout
+ 130 005E 00 C0		and		r0, r0, r0
+ 131 0060 E4 43		beq		main_loop	
+ 132           	case_aberto_l0:
+ 133 0062 64 60		mov		r4, #FECHAR_ST
+ 134 0064 E2 5B		b 		main_loop
+ 135           	case_parado_fechar:
+ 136 0066 80 B2		mov		r0, r5
+ 137 0068 3C 5C		bl		get_button
+ 138 006A 65 5C		bl		detect_falling_edge
+ 139 006C 00 C0		and		r0, r0, r0
+ 140 006E 02 40		beq		case_parado_fechar_l0
+ 141 0070 44 60		mov		r4, #ABRIR_ST
+ 142 0072 DB 5B		b 		main_loop
+ 143           	case_parado_fechar_l0:
+ 144 0074 00 B3		mov 	r0, r6
+ 145 0076 5A 5C		bl		get_time
+ 146 0078 51 5C		bl		timeout
+ 147 007A 00 C0		and 	r0, r0, r0
+ 148 007C D6 43		beq		main_loop
+ 149 007E 64 60		mov		r4, #FECHAR_ST
+ 150 0080 D4 5B		b 		main_loop
+ 151           	case_abrir:
+ 152 0082 80 B2		mov		r0, r5
+ 153 0084 32 5C		bl		get_sa
+ 154 0086 00 C0		and		r0, r0, r0
+ 155 0088 05 40		beq		case_abrir_l0
+ 156 008A 44 5C		bl		para
+ 157 008C 4F 5C		bl		get_time_ref
+ 158 008E 06 B0		mov		r6, r0
+ 159 0090 24 60		mov		r4, #ABERTO_ST
+ 160 0092 CB 5B		b 		main_loop
+ 161           	case_abrir_l0:
+ 162 0094 36 5C		bl		abre
+ 163 0096 80 B2		mov		r0, r5
+ 164 0098 24 5C		bl		get_button
+ 165 009A 4D 5C		bl		detect_falling_edge
+ 166 009C 00 C0		and		r0, r0, r0
+ 167 009E C5 43		beq		main_loop
+ 168 00A0 39 5C		bl		para
+ 169 00A2 44 5C		bl		get_time_ref
+ 170 00A4 06 B0		mov		r6, r0
+ 171 00A6 84 60		mov		r4, #PARADO_ABRIR_ST
+ 172 00A8 C0 5B		b 		main_loop
+ 173           	case_fechar:
+ 174 00AA 80 B2		mov		r0, r5
+ 175 00AC 26 5C		bl		get_so
+ 176 00AE 00 C0		and		r0, r0, r0
+ 177 00B0 02 40		beq		case_fechar_l0
+ 178 00B2 44 60		mov		r4, #ABRIR_ST
+ 179 00B4 BA 5B		b 		main_loop
+ 180           	case_fechar_l0:
+ 181 00B6 80 B2		mov 	r0, r5
+ 182 00B8 1C 5C		bl		get_sf
+ 183 00BA 00 C0		and		r0, r0, r0
+ 184 00BC 03 40		beq		case_fechar_l1
+ 185 00BE 2A 5C		bl		para
+ 186 00C0 04 60		mov		r4, #FECHADO_ST
+ 187 00C2 B3 5B		b 		main_loop
+ 188           	case_fechar_l1:
+ 189 00C4 22 5C		bl 		fecha
+ 190 00C6 80 B2		mov		r0, r5
+ 191 00C8 0C 5C		bl		get_button
+ 192 00CA 35 5C		bl		detect_falling_edge
+ 193 00CC 00 C0		and		r0, r0, r0
+ 194 00CE AD 43		beq		main_loop
+ 195 00D0 21 5C		bl		para
+ 196 00D2 2C 5C		bl 		get_time_ref
+ 197 00D4 06 B0		mov		r6, r0
+ 198 00D6 A4 60		mov		r4, #PARADO_FECHAR_ST
+ 199 00D8 A8 5B		b 		main_loop
+ 200           		
+ 201 00DA 06 04		pop		r6
+ 202 00DC 05 04		pop		r5
+ 203 00DE 04 04		pop		r4
+ 204 00E0 0F 04		pop		pc
+ 205           		
+ 206           		
+ 207           	; Camada aplicacional
+ 208           	
+ 209           	; uint8_t get_button(uint8_t inport_val);
+ 210           	get_button:
+ 211 00E2 11 60		mov		r1, #B_MSK
+ 212 00E4 80 C0		and		r0, r0, r1
+ 213 00E6 00 E8		lsr		r0, r0, #B_POS
+ 214 00E8 0F B7		mov		pc, lr
+ 215           	
+ 216           	; uint8_t get_sa(uint8_t inport_val);
+ 217           	get_sa:
+ 218 00EA 21 60		mov		r1, #SA_MSK
+ 219 00EC 80 C0		and		r0, r0, r1
+ 220 00EE 80 E8		lsr		r0, r0, #SA_POS
+ 221 00F0 0F B7		mov		pc, lr
+ 222           	
+ 223           	; uint8_t get_sf(uint8_t inport_val);
+ 224           	get_sf:
+ 225 00F2 41 60		mov		r1, #SF_MSK
+ 226 00F4 80 C0		and		r0, r0, r1
+ 227 00F6 00 E9		lsr		r0, r0, #SF_POS
+ 228 00F8 0F B7		mov		pc, lr
+ 229           	
+ 230           	; uint8_t get_so(uint8_t inport_val);
+ 231           	get_so:
+ 232 00FA 81 60		mov		r1, #SO_MSK
+ 233 00FC 80 C0		and		r0, r0, r1
+ 234 00FE 80 E9		lsr		r0, r0, #SO_POS
+ 235 0100 0F B7		mov		pc, lr
+ 236           	
+ 237           	; void abre();
+ 238           	abre:
+ 239 0102 0E 24		push	lr
+ 240 0104 30 60		mov		r0, #ONOFF_MSK + ABREFECHA_MSK
+ 241 0106 3E 5C		bl		outport_set_bits
+ 242 0108 0F 04		pop		pc
+ 243           		
+ 244           	; void fecha();
+ 245           	fecha:
+ 246 010A 0E 24		push	lr	
+ 247 010C 30 60		mov		r0, #ONOFF_MSK + ABREFECHA_MSK
+ 248 010E 11 60		mov		r1, #ONOFF_MSK
+ 249 0110 48 5C		bl		outport_write_bits
+ 250 0112 0F 04		pop		pc
+ 251           		
+ 252           	; void para();
+ 253           	para:
+ 254 0114 0E 24		push	lr
+ 255 0116 10 60		mov		r0, #ONOFF_MSK
+ 256 0118 3C 5C		bl		outport_clear_bits
+ 257 011A 0F 04		pop		pc
+ 258           		
+ 259           	; uint8_t timeout(uint16_t time);
+ 260           	timeout:
+ 261 011C 01 B0		mov		r1, r0
+ 262 011E E2 61		mov		r2, #TIMEOUT & 0xFF
+ 263 0120 02 70		movt	r2, #(TIMEOUT >> 8) & 0xFF
+ 264 0122 00 60		mov		r0, #0
+ 265 0124 10 B9		cmp		r1, r2
+ 266 0126 01 4C		blo		timeout_l0
+ 267 0128 10 60		mov		r0, #1
+ 268           	timeout_l0:
+ 269 012A 0F B7		mov		pc, lr
+ 270           		
+ 271           	; uint16_t get_time(uint16_t time_ref);
+ 272           	get_time:
+ 273           	; ToDo
+ 274           	
+ 275           	; uint16_t get_time_ref()
+ 276           	get_time_ref:
+ 277           	; ToDo
+ 278           		
+ 279           	; void print_state(uint8_t state);
+ 280           	print_state:
+ 281 012C 0E 24		push	lr
+ 282 012E 81 E2		lsl		r1, r0, #STATE_POS
+ 283 0130 00 6E		mov		r0, #STATE_MSK
+ 284 0132 37 5C		bl		outport_write_bits
+ 285 0134 0F 04		pop		pc
+ 286           		
+ 287           	/*
+ 288           	uint8_t b_last;
+ 289           	uint8_t detect_falling_edge(uint8_t b_now) {
+ 290           		uint8_t falling_edge = b_last == 1 && b_now == 0;
+ 291           		b_last = b_now;
+ 292           		return falling_edge;
+ 293           	}
+ 294           	*/
+ 295           	detect_falling_edge:
+ 296 0136 01 B0		mov		r1, r0
+ 297 0138 00 60		mov		r0, #0						; falling_edge = FALSE
+ 298 013A 72 0C		ldr		r2, B_LAST_ADDR
+ 299 013C 04 44		bzc		detect_falling_edge_l0	; b_now == 0
+ 300 013E 23 08		ldrb	r3, [r2]					; R3 = domain_last
+ 301 0140 B3 C1		and		r3, r3, r3
+ 302 0142 01 40		bzs		detect_falling_edge_l0	; b_last == 1
+ 303 0144 10 60		mov		r0, #1						; falling_edge = TRUE
+ 304           	detect_falling_edge_l0:
+ 305 0146 21 28		strb	r1, [r2]					; b_last = b_now
+ 306 0148 0F B7		mov		pc, lr						; return falling_edge
+ 307           	B_LAST_ADDR:
+ 308 014A CB 01		.word	b_last
+ 309           		
+ 310           	; Rotina:    isr
+ 311           	; Descricao: Incrementa o valor da vari�vel global sysclk.
+ 312           	; Entradas:  -
+ 313           	; Saidas:    -
+ 314           	; Efeitos:   *** Para completar ***
+ 315           	isr:
+ 316           	; ToDo
+ 317           	
+ 318           	; Rotina:    sysclk_init
+ 319           	; Descricao: Inicia uma nova contagem no periferico pTC com o intervalo de
+ 320           	;            contagem recebido em R0, em ticks, limpando eventuais pedidos de
+ 321           	;            interrupcao pendentes e iniciando com o valor zero a variavel
+ 322           	;            global sysclk.
+ 323           	;            Interface exemplo: void sysclk_init( uint8_t interval );
+ 324           	; Entradas:  R0 - Valor do novo intervalo de contagem, em ticks.
+ 325           	; Saidas:    -
+ 326           	; Efeitos:   Inicia a contagem no periferico a partir do valor zero, limpando
+ 327           	;            eventuais pedidos de interrupcao pendentes e iniciando com o
+ 328           	;            valor zero a variavel global sysclk
+ 329           	sysclk_init:
+ 330           	; ToDo
+ 331           		
+ 332           	; Rotina:    sysclk_get_ticks
+ 333           	; Descricao: Devolve o valor corrente da vari�vel global sysclk.
+ 334           	;            Interface exemplo: uint16_t sysclk_get_ticks ( );
+ 335           	; Entradas:  -
+ 336           	; Saidas:    *** Para completar ***
+ 337           	; Efeitos:   -
+ 338           	sysclk_get_ticks:
+ 339           	; ToDo
+ 340           	
+ 341           	; Gestor de perif�rico para o Pico Timer/Counter (pTC)
+ 342           	;
+ 343           	
+ 344           	; Rotina:    ptc_init
+ 345           	; Descricao: Faz a iniciacao do perif�rico pTC, habilitando o seu funcionamento
+ 346           	;            em modo continuo e com o intervalo de contagem recebido em R0, em
+ 347           	;            ticks.
+ 348           	;            Interface exemplo: void ptc_init( uint8_t interval );
+ 349           	; Entradas:  R0 - Valor do novo intervalo de contagem, em ticks.
+ 350           	; Saidas:    -
+ 351           	; Efeitos:   Inicia a contagem no periferico a partir do valor zero, limpando
+ 352           	;            o pedido de interrupcao eventualmente pendente.
+ 353           	ptc_init:
+ 354 014C 0E 24	    push    lr
+ 355 014E 51 0D		ldr	r1, PTC_ADDR
+ 356 0150 12 60		mov	r2, #PTC_CMD_STOP
+ 357 0152 12 28		strb	r2, [r1, #PTC_TCR]
+ 358 0154 10 29		strb	r0, [r1, #PTC_TMR]
+ 359 0156 0E 5C	    bl  ptc_clr_irq
+ 360 0158 02 60		mov	r2, #PTC_CMD_START
+ 361 015A 12 28		strb	r2, [r1, #PTC_TCR]
+ 362 015C 0F 04		pop pc
+ 363           	
+ 364           	; Rotina:    ptc_start
+ 365           	; Descricao: Habilita a contagem no periferico pTC.
+ 366           	;            Interface exemplo: void ptc_start( );
+ 367           	; Entradas:  -
+ 368           	; Saidas:    -
+ 369           	; Efeitos:   -
+ 370           	ptc_start:
+ 371 015E D0 0C		ldr	r0, PTC_ADDR
+ 372 0160 01 60		mov	r1, #PTC_CMD_START
+ 373 0162 01 28		strb	r1, [r0, #PTC_TCR]
+ 374 0164 0F B7		mov	pc, lr
+ 375           	
+ 376           	; Rotina:    ptc_stop
+ 377           	; Descricao: Para a contagem no periferico pTC.
+ 378           	;            Interface exemplo: void ptc_stop( );
+ 379           	; Entradas:  -
+ 380           	; Saidas:    -
+ 381           	; Efeitos:   O valor do registo TC do periferico e colocado a zero.
+ 382           	ptc_stop:
+ 383 0166 90 0C		ldr	r0, PTC_ADDR
+ 384 0168 11 60		mov	r1, #PTC_CMD_STOP
+ 385 016A 01 28		strb	r1, [r0, #PTC_TCR]
+ 386 016C 0F B7		mov	pc, lr
+ 387           	
+ 388           	; Rotina:    ptc_get_value
+ 389           	; Descricao: Devolve o valor corrente da contagem do periferico pTC.
+ 390           	;            Interface exemplo: uint8_t ptc_get_value( );
+ 391           	; Entradas:  -
+ 392           	; Saidas:    R0 - O valor corrente do registo TC do periferico.
+ 393           	; Efeitos:   -
+ 394           	ptc_get_value:
+ 395 016E 51 0C		ldr	r1, PTC_ADDR
+ 396 0170 10 0A		ldrb	r0, [r1, #PTC_TC]
+ 397 0172 0F B7		mov	pc, lr
+ 398           	
+ 399           	; Rotina:    ptc_clr_irq
+ 400           	; Descricao: Sinaliza o periferico pTC que foi atendido um pedido de
+ 401           	;            interrup��o.
+ 402           	;            Interface exemplo: void ptc_clr_irq( );
+ 403           	; Entradas:  -
+ 404           	; Saidas:    -
+ 405           	; Efeitos:   -
+ 406           	ptc_clr_irq:
+ 407 0174 20 0C		ldr	r0, PTC_ADDR
+ 408 0176 01 2B		strb	r1, [r0, #PTC_TIR]
+ 409 0178 0F B7		mov	pc, lr
+ 410           	
+ 411           	PTC_ADDR:
+ 412 017A 40 FF		.word	PTC_ADDRESS
+ 413           	
+ 414           	/*--------------------------------------------
+ 415           	 * Implementa��o da API para portos paralelos
+ 416           	 *--------------------------------------------*/
+ 417           	; Gestor de perif�rico para o porto de entrada
+ 418           	;
+ 419           	
+ 420           	; Rotina:    inport_read
+ 421           	; Descricao: Adquire e devolve o valor corrente do porto de entrada.
+ 422           	;            Interface exemplo: uint8_t inport_read( );
+ 423           	; Entradas:  -
+ 424           	; Saidas:    R0 - valor adquirido do porto de entrada
+ 425           	; Efeitos:   -
+ 426           	inport_read:
+ 427 017C 21 0C		ldr	r1, INPORT_ADDR
+ 428 017E 10 08		ldrb	r0, [r1, #0]
+ 429 0180 0F B7		mov	pc, lr
+ 430           	
+ 431           	INPORT_ADDR:
+ 432 0182 80 FF		.word	INPORT_ADDRESS
+ 433           	
+ 434           	; Gestor de perif�rico para o porto de sa�da
+ 435           	;
+ 436           	
+ 437           	; Rotina:    outport_set_bits
+ 438           	; Descricao: Atribui o valor logico 1 aos bits do porto de saida identificados
+ 439           	;            com o valor 1 em R0. O valor dos outros bits nao e alterado.
+ 440           	;            Interface exemplo: void outport_set_bits( uint8_t pins_mask );
+ 441           	; Entradas:  R0 - Mascara com a especificacao do indice dos bits a alterar.
+ 442           	; Saidas:    -
+ 443           	; Efeitos:   Altera o valor da variavel global outport_img.
+ 444           	outport_set_bits:
+ 445 0184 0E 24		push	lr
+ 446 0186 C1 0D		ldr	r1, outport_img_addr
+ 447 0188 12 08		ldrb	r2, [r1, #0]
+ 448 018A 20 C8		orr	r0, r2, r0
+ 449 018C 10 28		strb	r0, [r1, #0]
+ 450 018E 19 5C		bl	outport_write
+ 451 0190 0F 04		pop	pc
+ 452           	
+ 453           	; Rotina:    outport_clear_bits
+ 454           	; Descricao: Atribui o valor logico 0 aos bits do porto de saida identificados
+ 455           	;            com o valor 1 em R0. O valor dos outros bits nao e alterado.
+ 456           	;            Interface exemplo: void outport_clear_bits( uint8_t pins_mask );
+ 457           	; Entradas:  R0 - Mascara com a especificacao do indice dos bits a alterar.
+ 458           	; Saidas:    -
+ 459           	; Efeitos:   Altera o valor da variavel global outport_img.
+ 460           	outport_clear_bits:
+ 461 0192 0E 24		push	lr
+ 462 0194 51 0D		ldr	r1, outport_img_addr
+ 463 0196 12 08		ldrb	r2, [r1, #0]
+ 464 0198 10 B0		mvn	r0, r0
+ 465 019A 20 C0		and	r0, r2, r0
+ 466 019C 10 28		strb	r0, [r1]
+ 467 019E 11 5C		bl	outport_write
+ 468 01A0 0F 04		pop	pc
+ 469           	
+ 470           	/* 
+ 471           	Atribui aos bits do porto de sa�da identificados com o valor l�gico um em pins_mask o valor dos bits correspondentes de value. O valor dos restantes bits n�o � alterado.
+ 472           	void outport_write_bits ( uint8_t pins_mask , uint8_t value );
+ 473           	*/
+ 474           	outport_write_bits:
+ 475 01A2 0E 24		push	lr
+ 476 01A4 11 C0		and		r1, r1, r0 ; filtra os bits em value de acordo com pins_mask
+ 477 01A6 C2 0C		ldr		r2, outport_img_addr
+ 478 01A8 23 08		ldrb	r3, [r2]
+ 479 01AA 10 B0		mvn		r0, r0
+ 480 01AC 80 C1		and		r0, r0, r3
+ 481 01AE 80 C8		orr		r0, r0, r1
+ 482 01B0 20 28		strb	r0, [r2]
+ 483 01B2 07 5C		bl		outport_write
+ 484 01B4 0F 04		pop		pc
+ 485           	
+ 486           	; Rotina:    outport_init
+ 487           	; Descricao: Faz a iniciacao do porto de saida, nele estabelecendo o valor
+ 488           	;            recebido em R0.
+ 489           	;            Interface exemplo: void outport_init( uint8_t value );
+ 490           	; Entradas:  R0 - Valor a atribuir ao porto de saida.
+ 491           	; Saidas:    -
+ 492           	; Efeitos:   Altera o valor da variavel global outport_img.
+ 493           	outport_init:
+ 494 01B6 0E 24		push	lr
+ 495 01B8 31 0C		ldr	r1, outport_img_addr
+ 496 01BA 10 28		strb	r0, [r1]
+ 497 01BC 02 5C		bl	outport_write
+ 498 01BE 0F 04		pop	pc
+ 499           	
+ 500           	outport_img_addr:
+ 501 01C0 CA 01		.word	outport_img
+ 502           	
+ 503           	; Rotina:    outport_write
+ 504           	; Descricao: Escreve no porto de saida o valor recebido em R0.
+ 505           	;            Interface exemplo: void outport_write( uint8_t value );
+ 506           	; Entradas:  R0 - valor a atribuir ao porto de saida.
+ 507           	; Saidas:    -
+ 508           	; Efeitos:   -
+ 509           	outport_write:
+ 510 01C2 21 0C		ldr	r1, OUTPORT_ADDR
+ 511 01C4 10 28		strb	r0, [r1, #0]
+ 512 01C6 0F B7		mov	pc, lr
+ 513           	
+ 514           	OUTPORT_ADDR:
+ 515 01C8 C0 FF		.word	OUTPORT_ADDRESS
+ 516           	
+ 517           		.data
+ 518           		; sec��o com dados globais iniciados e n�o iniciados
+ 519           	outport_img:
+ 520 01CA 00   		.space		1
+ 521           	b_last:					; Last registered value of button B
+ 522 01CB 00   		.space		1
+ 523          		.align
+ 524           	sysclk:
+ 525 01CC 00   		.space		2
+ 525 01CD 00
+ 526           		
+ 527          		.equ STACK_SIZE, 64
+ 528           		.section .stack
+ 529           		; sec��o stack para armazenamento de dados tempor�rios
+ 530 01CE 00   		.space	STACK_SIZE
+ 530 .... ..
+ 530 020D 00
+ 531           	stack_top:
+ 531           	

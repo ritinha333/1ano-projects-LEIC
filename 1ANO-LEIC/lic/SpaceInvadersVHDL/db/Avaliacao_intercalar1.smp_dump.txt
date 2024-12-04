@@ -1,0 +1,7 @@
+
+State Machine - |Key_Control|CurrentState
+Name CurrentState.WAIT_NOT_KEY_PRESS CurrentState.WAIT_NOT_KEY_ACK CurrentState.WAIT_KEY_ACK CurrentState.WAIT_KEY_PRESS 
+CurrentState.WAIT_KEY_PRESS 0 0 0 0 
+CurrentState.WAIT_KEY_ACK 0 0 1 1 
+CurrentState.WAIT_NOT_KEY_ACK 0 1 0 1 
+CurrentState.WAIT_NOT_KEY_PRESS 1 0 0 1 

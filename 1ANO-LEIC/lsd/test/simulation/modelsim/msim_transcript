@@ -1,0 +1,60 @@
+# Reading C:/intelFPGA_lite/19.1/modelsim_ase/tcl/vsim/pref.tcl
+# do tests_run_msim_rtl_vhdl.do
+# if {[file exists rtl_work]} {
+# 	vdel -lib rtl_work -all
+# }
+# vlib rtl_work
+# vmap work rtl_work
+# Model Technology ModelSim - Intel FPGA Edition vmap 10.5b Lib Mapping Utility 2016.10 Oct  5 2016
+# vmap work rtl_work 
+# Copying C:/intelFPGA_lite/19.1/modelsim_ase/win32aloem/../modelsim.ini to modelsim.ini
+# Modifying modelsim.ini
+# 
+# vcom -93 -work work {C:/Users/ritam/OneDrive/Ambiente de Trabalho/LEIC 2 ANO/2semestre/LIC/LSD/test/tests.vhd}
+# Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 10:46:28 on Feb 24,2024
+# vcom -reportprogress 300 -93 -work work C:/Users/ritam/OneDrive/Ambiente de Trabalho/LEIC 2 ANO/2semestre/LIC/LSD/test/tests.vhd 
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Compiling entity tests
+# -- Compiling architecture logicFunction of tests
+# End time: 10:46:28 on Feb 24,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+vsim work.tests
+# vsim work.tests 
+# Start time: 10:47:02 on Feb 24,2024
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading work.tests(logicfunction)
+add wave -position insertpoint  \
+sim:/tests/A
+add wave -position insertpoint  \
+sim:/tests/B
+add wave -position insertpoint  \
+sim:/tests/C
+add wave -position insertpoint  \
+sim:/tests/F
+force -freeze sim:/tests/A 1 0
+force -freeze sim:/tests/B 1 0
+force -freeze sim:/tests/B 1 0
+force -freeze sim:/tests/F 0 0
+run
+force -freeze sim:/tests/C 0 0
+force -freeze sim:/tests/F U 0
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+# End time: 13:14:49 on Feb 24,2024, Elapsed time: 2:27:47
+# Errors: 0, Warnings: 0

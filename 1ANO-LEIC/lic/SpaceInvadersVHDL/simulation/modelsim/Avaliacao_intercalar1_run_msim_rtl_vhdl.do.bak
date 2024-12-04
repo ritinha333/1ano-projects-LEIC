@@ -1,0 +1,35 @@
+transcript on
+if {[file exists rtl_work]} {
+	vdel -lib rtl_work -all
+}
+vlib rtl_work
+vmap work rtl_work
+
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/Register2bits.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/Register.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/PENC.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/MUX21.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/KeyboardReader.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/Key_Scan.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/Key_Decode.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/Key_Control.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/FULLADDER.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/FFD.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/Decoder.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/Counter_UP.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/Counter.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/Compare.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/clkDIV.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/Avaliacao_intercalar1.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/ADDER.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/Serial_Receiver.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/Parity_Check.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/Shift_Register.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/Compare4.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/Serial_Control.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/Counter_4BITS.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/LCD_Dispatcher.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/Serial_LCD_Controller.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/counter_up4.vhd}
+vcom -93 -work work {C:/Users/Julianne/Downloads/VHD_Proj/adder4.vhd}
+

@@ -1,0 +1,127 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/simulation/modelsim
+Effd
+Z1 w1714101028
+Z2 DPx3 std 6 textio 0 22 zE1`LPoLg^DX3Oz^4Fj1K3
+Z3 DPx4 ieee 14 std_logic_1164 0 22 eNV`TJ_GofJTzYa?f<@Oe1
+R0
+Z4 8C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/FFD.vhd
+Z5 FC:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/FFD.vhd
+l0
+L4
+VlLnJhUY99`]7^:0M0ZT@z3
+!s100 7zIA7N0c8k?G4DH:]Q7>;3
+Z6 OV;C;10.5b;63
+31
+Z7 !s110 1715942489
+!i10b 1
+Z8 !s108 1715942489.000000
+Z9 !s90 -reportprogress|300|-93|-work|work|C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/FFD.vhd|
+Z10 !s107 C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/FFD.vhd|
+!i113 1
+Z11 o-93 -work work
+Z12 tExplicit 1 CvgOpt 0
+Alogicfunction
+R2
+R3
+DEx4 work 3 ffd 0 22 lLnJhUY99`]7^:0M0ZT@z3
+l16
+L14
+VXLGJhA0YLNkWk3eiz=LFX0
+!s100 EbhLHDh93W5h:OfQP8>M81
+R6
+31
+R7
+!i10b 1
+R8
+R9
+R10
+!i113 1
+R11
+R12
+Eshift_register_7bits
+Z13 w1715875978
+R2
+R3
+R0
+Z14 8C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/Shift_Register_7bits.vhd
+Z15 FC:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/Shift_Register_7bits.vhd
+l0
+L4
+VA3`j0XIePF9LDQcSk]_de0
+!s100 [VbP9d^W9do1Ea:kVjKLi1
+R6
+31
+R7
+!i10b 1
+R8
+Z16 !s90 -reportprogress|300|-93|-work|work|C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/Shift_Register_7bits.vhd|
+Z17 !s107 C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/Shift_Register_7bits.vhd|
+!i113 1
+R11
+R12
+Aarq_shift_register_7bits
+R2
+R3
+DEx4 work 20 shift_register_7bits 0 22 A3`j0XIePF9LDQcSk]_de0
+l32
+L17
+Vbc:jE0ZZO4icN=A>>LVRD2
+!s100 XzAkV:jRLJRfEjH@Z:S:l0
+R6
+31
+R7
+!i10b 1
+R8
+R16
+R17
+!i113 1
+R11
+R12
+Eshift_register_7bits_tb
+Z18 w1715942415
+R2
+R3
+R0
+Z19 8C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/Shift_Register_7bits_tb.vhd
+Z20 FC:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/Shift_Register_7bits_tb.vhd
+l0
+L4
+VMHZ:kzIV`ZZCf]GFZFKML2
+!s100 bl1bB:5i6d^:N]XFdodeZ3
+R6
+32
+Z21 !s110 1715942884
+!i10b 1
+Z22 !s108 1715942884.000000
+Z23 !s90 -reportprogress|300|-work|work|C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/Shift_Register_7bits_tb.vhd|
+Z24 !s107 C:/uni/LEIC 2 ANO/2semestre/LIC/TUDO_Funciona_(1.0)[1]/TUDO Funciona (1.0)/Shift_Register_7bits_tb.vhd|
+!i113 1
+Z25 o-work work
+R12
+Abehavioral
+R2
+R3
+Z26 DEx4 work 23 shift_register_7bits_tb 0 22 MHZ:kzIV`ZZCf]GFZFKML2
+l35
+L7
+Z27 Vng]<79oLFU=R:e9`Nn4a^2
+Z28 !s100 W;UQ<YJ;kE>1U<1U`@chY3
+R6
+32
+R21
+!i10b 1
+R22
+R23
+R24
+!i113 1
+R25
+R12

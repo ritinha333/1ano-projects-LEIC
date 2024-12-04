@@ -1,0 +1,16 @@
+Analysis & Synthesis Status : Successful - Fri May 17 11:40:46 2024
+Quartus Prime Version : 19.1.0 Build 670 09/22/2019 SJ Lite Edition
+Revision Name : Avaliacao_intercalar1
+Top-level Entity Name : Shift_Register_7bits
+Family : MAX 10
+Total logic elements : 7
+    Total combinational functions : 0
+    Dedicated logic registers : 7
+Total registers : 7
+Total pins : 20
+Total virtual pins : 0
+Total memory bits : 0
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 0
+UFM blocks : 0
+ADC blocks : 0

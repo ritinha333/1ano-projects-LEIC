@@ -1,0 +1,128 @@
+package serie2.part3
+
+import java.util.NoSuchElementException
+
+A classe tem as propriedades size, table e capacity
+
+class AEDHashMap<K, V> (initialCapacity: Int = 16, val loadFactor: Float = 0.75f) {
+
+    var size: Int = 0
+    private set // faz com que size só possa ser modificado dentro desta class
+
+   //: MutableMap<K, V> {
+   class HashNode<K, V>(
+       override val key: K, override var value: V, var next: HashNode<K, V>? = null):
+       MutableMap.MutableEntry<K,V> {
+        //var hc = key.hashCode() // sinceramente ns como uso disto do lado de fora
+        override fun setValue(newValue: V): V {
+            val oldValue = value
+            value = newValue
+            return oldValue
+        }
+    }
+
+    private var table: Array<HashNode<K, V>?> = arrayOfNulls(initialCapacity) // inicializar a tabela
+    var capacity: Int = table.size
+
+     operator fun get(key: K): V? {
+        val idx = (key.hashCode() % table.size).let { if (it < 0) it + table.size else it }
+         capacity = table.size
+        return table[idx]?.value
+    }
+
+
+    val keys: Set<K>
+        get() {
+            val keySet = mutableSetOf<K>()
+            for (node in table) {
+                var current = node
+                while (current != null) {
+                    keySet.add(current.key)
+                    current = current.next
+                }
+            }
+            return keySet
+        }
+
+    private inner class MyIterator: Iterator<MutableMap.MutableEntry<K,V>> {
+        var currIdx = -1;
+        var currNode: HashNode<K, V>? = null
+        var list: HashNode<K, V>? = null
+
+        override fun hasNext(): Boolean {
+            if (currNode != null) return true
+            while (currIdx < capacity) {
+                if (list == null) {
+                    currIdx++
+                    if (currIdx < capacity) list = table[currIdx]
+                } else {
+                    currNode = list
+                    list?.let { l -> list = l.next }
+                    return true
+                }
+            }
+            return false;
+        }
+
+        override fun next(): MutableMap.MutableEntry<K, V> {
+            if (!hasNext()) throw NoSuchElementException()
+            val aux = currNode
+            currNode = null
+            return aux ?: Any() as MutableMap.MutableEntry<K, V>
+        }
+    }
+
+    operator fun iterator(): Iterator<MutableMap.MutableEntry<K, V>> = MyIterator()
+
+    fun put (key: K, Value:V): V? {
+        needToexpand()
+        val idx = key.hashCode() % table.size // calcular o valor de hash e cosnequenemtne o idx para a key
+        val node = contains(key) // verificar se a key ja existe
+        if (node != null) {
+            val oldValue = node.value
+            node.value = Value
+            return oldValue //acho que aqui é para retornar node ??????
+        }
+        else {
+            val newNode = HashNode(key, Value)
+            newNode.next = table[idx] // colocar ao inicio
+            table[idx] = newNode // atualizar na tabela
+            size++  // incrementar o tamanho
+            capacity = table.size
+            return null
+        }
+
+    }
+
+     fun contains(key: K): HashNode<K, V>? {
+        val idx = key.hashCode() % table.size // calcular o valor de hash e cosnequenemtne o idx para a key
+        var cur = table[idx] // ir buscar o node que esta na posicao idx
+        while (cur != null) {
+            if (cur.key == key && key != null) return cur // verificar se a key é igual a key do node
+            cur = cur.next // passar para o proximo node
+        }
+        return null
+    }
+    private fun needToexpand() {
+        if( size >= table.size * loadFactor)
+            expand()
+        }
+    private fun expand() {
+        val newtable = arrayOfNulls<HashNode<K,V>>(table.size * 2)
+        for (node in table) {
+            var cur = node
+            while (cur != null) {
+                val idx = cur.key.hashCode() % newtable.size // calculamos o index a partir do hash do proprio node
+                val next = cur.next           // guardamos o next node
+                cur.next = newtable[idx]      // o next do current node passa a ser o node que estava na posicao idx
+                newtable[idx] = cur          // o node que estava na posicao idx passa a ser o current node
+                cur = next             // o current node passa a ser o next node
+            }
+        }
+        capacity = table.size
+        table = newtable
+    }
+
+
+    //private set
+}

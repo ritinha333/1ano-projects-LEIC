@@ -1,0 +1,20 @@
+LIBRARY IEEE;
+use IEEE.std_logic_1164.all;
+
+entity OR_FILE is
+	port(
+		A: IN STD_LOGIC;
+		B: IN STD_LOGIC;
+		R: OUT STD_LOGIC;
+end OR_FILE;
+
+
+architecture teste of OR_FILE is
+signal sA, sB, sR: STD_LOGIC;
+
+begin
+
+sR <= sA OR sB;
+
+end architecture;
+

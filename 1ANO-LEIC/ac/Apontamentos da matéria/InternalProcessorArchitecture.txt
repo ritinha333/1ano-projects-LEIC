@@ -1,0 +1,84 @@
+ Estrutura de um processador a 8 bit:
+    - Arquitetura 8 bits
+    - Com 4 registos genéricos (8 bits cada)
+    - ALU a 8 bits
+    - Registo CPSR com flag Z
+    - Espaço de endereçamento = 256K Bytes
+    
+    Conjunto de Instruções implementada pelo processador:
+    1   add rd, rn          rd ← rd + rn                                000-|   rn  |   rd  |
+    2   b rn                PC ← rn                                     010-|   rn  |   --  |
+    3   bzs label           ( CPSR.Z == 1 ) ? PC ← label : PC ← PC + 1  011|    label       |
+    4   cmp rm, rn          ( rm − rn == 0) ? CPSR.Z ← 1 : CPSR.Z ← 0   001-|   rm  |   rn  |
+    5   ldr rd, [rn]        rd ← mem[rn]                                100-|   rn  |   rd  |
+    6   mov rd, #imm3       rd ← imm3                                   111|  imm3  |   rd  |
+    7   str rd, [#imm3]     mem[imm3] ← rd                              101|  imm3  |   rs  |
+
+    - Para codificar estas instruções o que devemos fazer é, agrupar o conjunto de instruções existentes como processamento de dados, 
+    transferência de dados e controlo de fluxo.
+    - O opcode de cada tipo de operação irá variar de acordo a qual grupo pertence.
+    
+    Codificação das instruções:
+
+        1   000-|   rn  |   rd  |
+        2   010-|   rn  |   --  |
+        3   011|    label       |
+        4   001-|   rm  |   rn  |
+        5   100-|   rn  |   rd  |
+        6   111|  imm3  |   rd  |
+        7   101|  imm3  |   rs  |
+
+        - opcode = bits(7..5)
+        - imm3 = bits(4..2)
+        - label = bits(4..0)
+        - DA (Destination Address) = BA (operand B Address) = bits(1..0)
+        - AA(operand A Address) = bits(3..2)
+        - OPALU (ALU operation) = bit(5)
+
+    Unidade de processamento:
+    Para efetuar a instrução => add rd, rn e cmp rm, rn
+
+    - Para serem executadas ambas as instruções é necessário 3 estruturas: um register file (4x8bits), ALU a 8bits, CPSR module.
+    
+        add r0, r2: Para esta instrução, DA = '00' = BA = '00' = r0, AA = '10' = r2, ER(WE) = 1 (pois quero escrever no register file),
+        na saída A estará o valor '10' e na saída B estará o valor '00', OPA = '0' (pois quero fazer uma soma), não existem implicações
+        no CPSR mas o seu enable (EP) estará a 1 uma vez que é uma operação na ALU, D = soma r0 e r2 e escreve esse valor no register file
+        no endereço de r0.
+
+        cmp r3, r1: Para esta instrução, DA = '--' (pois não quero escrever em nenhum registo), AA = '11' = r3, BA = '01' = r1, ER(WE) ='0'
+        (pois não quero escrever no register file), na saída A estará o valor '11', na saída B estará o valor '01', como estamos a fazer uma
+        subtração o selector OPA = '1', e o enable de CPSR estará ativo pois queremos saber se o valor foi zero ou não.
+    
+    Para efetuar a instrução => mov rd, #imm3
+
+    - Para que a instrução mov seja executada é necessário adicionar ao hardware que já temos, um Zero extensor e um multiplexer.
+
+        mov r3, #5: Para esta instrução DA = '11' = r3, o valor de BA e AA são indiferentes, ER(WE) = '1' (pois queremos escrever num resgister file),
+        imm3 = '101' = 5, Zero Ext = '0000 0101' (colocou 0's nos restantes 5 bits), no mux o valor de SD = '1' para ir buscar o valor vindo do extensor
+        e vai colocar esse valor '0000 0101' na entrada D do register file e escrevê-lo no registo r3 = DA = '11' e o valor do EP estará a '0'.
+
+    
+    Para efetuar a instrução => ldr rd, [rn]
+
+    - Para a instrução load, é preciso adicionar memória de dados ao sistema (como estamos presentes numa arquitetura Harvard, existe uma memória para dados e
+    uma memória para instruções), Data Memory (256 x 8 bits)
+
+        ldr r0, [r2]: Para esta instrução DA = '00' = r0, AA = '10' = r2, BA é indiferente, ER(WE) = '1' (pois vou querer ler o valor em memória e escrevê-lo
+        no register file para o endereço que está em DA), A da memória de dados fica com o valor '10', OE = '0' (pois quero fazer a leitura de um registo com o 
+        endereço com o valor A), na saída D da memória terei o valor que estava na posição de memória A, no mux queremos que SD selecione 1 logo SD = '01', o 
+        valor do mux fica na entrada D do register file pronto para ser escrito no registo de DA = '00' = r0, EP = '0'.
+
+    Para efetuar a instrução => str rd, [#imm3]
+
+    - Para a instrução store, acrescentamos um tri-state buffer, e um multiplexer
+
+        str r2, [#6]: Para esta instrução DA e AA é indiferente, BA = '10' (fica com o valor de r2), ER(WE) = '0' (pois não quero escrever nada no register file), 
+        no operando B fico com o valor de BA = '10', imm3 = '110' = 6, Zero Ext = '0000 0110' (estendeu os 5 bits a zero), o selector do mux SA = '0' (pois queremos
+        selecionar o valor imediato), A da memória de dados fica com o valor imediato = '0000 0110', OE = '1' (não quero ler logo este fica a 1 pois é negado), 
+        WE = '0' (pois queremos escrever na memória de dados), D da memória de dados terá o valor de BA = B = '10' logo quero escrever no endereço de memória de '10'
+        o valor que é colocado na entrada A, que é o valor imediato a 8bits.
+
+    Instruções de controlo:
+    - Qualquer instrução que altera o valor do Program Counter (PC) é uma instrução de controlo.
+    - A unidade de controlo é constituída por 4 módulos: Next PC, PC, barramento de instruções, Instruction Decoder 
+    - Next PC:

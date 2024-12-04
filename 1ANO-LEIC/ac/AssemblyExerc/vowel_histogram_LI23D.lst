@@ -1,0 +1,263 @@
+P16 assembler v1.5 (Feb  9 2024)	c:\Users\gonca\OneDrive\Documentos\Licenciatura\Arquitetura_de_Computadores\SV_23_24\labs\ComputerArchProj\AssemblyExerc\vowel_histogram_LI23D.lst	Sun Mar 17 21:53:10 2024
+
+Sections
+Index   Name            Address   Size
+0       .startup        0000      0012 18
+1       .text           0012      00B0 176
+2       .data           00C2      004D 77
+3       .stack          0110      0040 64
+
+Symbols
+Name                    Type      Value       Section
+_start                  LABEL     0004 4      .startup
+fill_zero               LABEL     00B2 178    .text
+fill_zero_while_body    LABEL     00B8 184    .text
+fill_zero_while_ctrl    LABEL     00BC 188    .text
+line#15                 LABEL     000C 12     .startup
+line#9                  LABEL     0002 2      .startup
+main                    LABEL     0012 18     .text
+main_addr               LABEL     0010 16     .startup
+MINUS1                  ABSOLUTE  FFFF 65535  .startup
+occurrence1_addr        LABEL     0032 50     .text
+occurrence2_addr        LABEL     0034 52     .text
+occurrences1            LABEL     00C2 194    .data
+occurrences2            LABEL     00CC 204    .data
+phrase1                 LABEL     00D6 214    .data
+phrase1_addr            LABEL     0036 54     .text
+phrase2                 LABEL     00E3 227    .data
+phrase2_addr            LABEL     0038 56     .text
+SIZE                    ABSOLUTE  0005 5      .startup
+STACK_SIZE              ABSOLUTE  0102 258    .data
+stack_top               LABEL     0150 336    .stack
+stack_top_addr          LABEL     000E 14     .startup
+vowel_histogram         LABEL     003A 58     .text
+vowel_histogram_end     LABEL     006E 110    .text
+vowel_histogram_for_body LABEL     0054 84     .text
+vowel_histogram_for_ctrl LABEL     0064 100    .text
+vowel_histogram_for_update LABEL     0062 98     .text
+which_vowel             LABEL     007A 122    .text
+which_vowel_case_e      LABEL     0084 132    .text
+which_vowel_case_i      LABEL     008E 142    .text
+which_vowel_case_o      LABEL     0098 152    .text
+which_vowel_case_u      LABEL     00A2 162    .text
+which_vowel_default     LABEL     00AC 172    .text
+which_vowel_ret         LABEL     00B0 176    .text
+
+Code listing
+   1           	/* Secção de arranque: código de inicialização
+   2           	 * 1. Estabelece vetores (entry point após reset e de interrupção)
+   3           	 * 2. Inicia stack pointer
+   4           	 * 3. Chama main
+   5           	 * 4. Retém a execução do CPU após o retorno do main
+   6           	 */
+   7           		.section .startup
+   8 0000 01 58		b		_start
+   9 0002 FF 5B		b 		.
+  10           	_start:
+  11 0004 4D 0C		ldr		sp, stack_top_addr
+  12 0006 80 B7		mov		r0, pc
+  13 0008 0E A2		add		lr, r0, #4
+  14 000A 2F 0C		ldr		pc, main_addr
+  15 000C FF 5B		b 		.	
+  16           	stack_top_addr:
+  17 000E 50 01		.word stack_top
+  18           	main_addr:
+  19 0010 12 00		.word	main
+  20           		
+  21           	/* 	Constantes */
+  22          		.equ	SIZE, 5
+  23          		.equ	MINUS1, -1
+  24           	
+  25           	/* Secção com código aplicacional (programa)
+  26           	 */
+  27           		.text
+  28           	/*
+  29           	void main ( void ){
+  30           		fill_zero(occurences1, SIZE * 2);
+  31           		fill_zero(occurences2, SIZE * 2);
+  32           		vowel_histogram ( phrase1 , 7, occurrences1 );
+  33           		vowel_histogram ( phrase2 , 50, occurrences2 );
+  34           	}
+  35           	*/
+  36           	main:
+  37           		; salva LR se fun��o n�o folha
+  38 0012 0E 24		push	lr
+  39 0014 E0 0C		ldr		r0, occurrence1_addr
+  40 0016 A1 60		mov		r1, #SIZE * 2
+  41 0018 4C 5C		bl 		fill_zero				; fill_zero(occurrences1, SIZE * 2)
+  42 001A C0 0C		ldr		r0, occurrence2_addr
+  43 001C A1 60		mov		r1, #SIZE * 2
+  44 001E 49 5C		bl 		fill_zero				; fill_zero(occurrences1, SIZE * 2)
+  45 0020 A0 0C		ldr		r0, phrase1_addr
+  46 0022 71 60		mov		r1, #7
+  47 0024 62 0C		ldr		r2, occurrence1_addr
+  48 0026 09 5C		bl		vowel_histogram		; vowel_histogram(phrase1, 7, occurences1);
+  49 0028 70 0C		ldr		r0, phrase2_addr
+  50 002A 21 63		mov		r1, #50
+  51 002C 32 0C		ldr		r2, occurrence2_addr
+  52 002E 05 5C		bl		vowel_histogram		; vowel_histogram(phrase2, 50, occurrences2);	
+  53           		; retorna desempilhando endere�o de retorno se fun��o n�o folha
+  54 0030 0F 04		pop		pc
+  55           	occurrence1_addr:
+  56 0032 C2 00		.word 	occurrences1
+  57           	occurrence2_addr:
+  58 0034 CC 00		.word 	occurrences2
+  59           	phrase1_addr:
+  60 0036 D6 00		.word 	phrase1
+  61           	phrase2_addr:
+  62 0038 E3 00		.word 	phrase2
+  63           		
+  64           	/*
+  65           	void vowel_histogram ( char phrase [], uint16_t max_letters , 
+  66           								uint16_t occurrences [5] ) {
+  67           		int16_t idx ;
+  68           		uint16_t i;
+  69           		for ( i = 0; phrase [i]!= '\0 ' && i < max_letters ; i++ ) {
+  70           			if ( ( idx = which_vowel ( phrase [i] ) ) != -1 ) {
+  71           				occurrences [ idx ]++;
+  72           			}
+  73           		}
+  74           	}*/
+  75           	vowel_histogram:
+  76 003A 0E 24		push	lr
+  77 003C 04 24		push	r4			; phrase
+  78 003E 05 24		push	r5			; max_letters
+  79 0040 06 24		push	r6			; occurrences
+  80 0042 07 24		push	r7			; i
+  81 0044 08 24		push	r8
+  82 0046 04 B0		mov		r4, r0
+  83 0048 85 B0		mov		r5, r1	
+  84 004A 06 B1		mov		r6, r2
+  85 004C 07 60		mov		r7, #0		; i = 0
+  86 004E F8 6F		mov		r8, #MINUS1 & 0xFF
+  87 0050 F8 7F		movt	r8, #MINUS1 >> 8
+  88 0052 08 58		b 		vowel_histogram_for_ctrl
+  89           	vowel_histogram_for_body:
+  90 0054 12 5C		bl		which_vowel	; which_vowel(phrase[i])
+  91 0056 00 BC		cmp		r0, r8
+  92 0058 04 40		beq		vowel_histogram_for_update
+  93 005A 80 E0		lsl		r0, r0, #1
+  94 005C 61 18		ldrb	r1, [r6, r0]	; r1 = occurrences[idx]
+  95 005E 91 A0		add		r1, r1, #1		; occurrences[idx]++
+  96 0060 61 38		strb	r1, [r6, r0]	; occurrences[idx] = r1
+  97           	vowel_histogram_for_update:
+  98 0062 F7 A0		add		r7, r7, #1		; i++
+  99           	vowel_histogram_for_ctrl:
+ 100 0064 C0 1B		ldrb	r0, [r4, r7]	; r0 = phrase[i]
+ 101 0066 00 C0		and		r0, r0, r0		; phrase[i] != '\0'
+ 102 0068 02 40		bzs		vowel_histogram_end
+ 103 006A F0 BA		cmp		r7, r5			; i < max_letters
+ 104 006C F3 4F		blo 	vowel_histogram_for_body
+ 105           	vowel_histogram_end:
+ 106 006E 08 04		pop		r8
+ 107 0070 07 04		pop		r7
+ 108 0072 06 04		pop		r6
+ 109 0074 05 04		pop		r5
+ 110 0076 04 04		pop		r4
+ 111 0078 0F 04		pop		pc
+ 112           		
+ 113           	/*
+ 114           	int16_t which_vowel ( char letter ) {
+ 115           		int16_t i;
+ 116           		switch ( letter ) {
+ 117           			case 'a' : i = 0; break ;
+ 118           			case 'e' : i = 1; break ;
+ 119           			case 'i' : i = 2; break ;
+ 120           			case 'o' : i = 3; break ;
+ 121           			case 'u' : i = 4; break ;
+ 122           			default : i = -1;
+ 123           		}
+ 124           		return i;
+ 125           	}
+ 126           	*/
+ 127           	which_vowel:
+ 128 007A 11 66		mov		r1, #'a'
+ 129 007C 80 B8		cmp		r0, r1
+ 130 007E 02 44		bne		which_vowel_case_e
+ 131 0080 00 60		mov		r0, #0
+ 132 0082 16 58		b 		which_vowel_ret
+ 133           	which_vowel_case_e:
+ 134 0084 51 66		mov		r1, #'e'
+ 135 0086 80 B8		cmp		r0, r1
+ 136 0088 02 44		bne 	which_vowel_case_i
+ 137 008A 10 60		mov		r0, #1
+ 138 008C 11 58		b 		which_vowel_ret
+ 139           	which_vowel_case_i:
+ 140 008E 91 66		mov		r1, #'i'
+ 141 0090 80 B8		cmp		r0, r1
+ 142 0092 02 44		bne 	which_vowel_case_o
+ 143 0094 20 60		mov		r0, #2
+ 144 0096 0C 58		b 		which_vowel_ret
+ 145           	which_vowel_case_o:
+ 146 0098 F1 66		mov		r1, #'o'
+ 147 009A 80 B8		cmp		r0, r1
+ 148 009C 02 44		bne 	which_vowel_case_u
+ 149 009E 30 60		mov		r0, #3
+ 150 00A0 07 58		b 		which_vowel_ret
+ 151           	which_vowel_case_u:
+ 152 00A2 51 67		mov		r1, #'u'
+ 153 00A4 80 B8		cmp		r0, r1
+ 154 00A6 02 44		bne 	which_vowel_default
+ 155 00A8 40 60		mov		r0, #4
+ 156 00AA 02 58		b 		which_vowel_ret
+ 157           	which_vowel_default:
+ 158 00AC F0 6F		mov		r0, #0xFF
+ 159 00AE F0 7F		movt	r0, #0xFF
+ 160           	which_vowel_ret:
+ 161 00B0 0F B7		mov		pc, lr
+ 162           	
+ 163           	
+ 164           	/* void fill_zero(uint8_t a[], uint16_t size) {
+ 165           			for (uint16_t i = 0; i < size; i++) 
+ 166           				a[i] = 0;
+ 167           		}
+ 168           	*/
+ 169           	fill_zero:
+ 170 00B2 02 60		mov		r2, #0 			; i = 0
+ 171 00B4 03 60		mov		r3, #0 			; val = 0
+ 172 00B6 02 58		b 		fill_zero_while_ctrl
+ 173           	fill_zero_while_body:
+ 174 00B8 03 39		strb	r3, [r0, r2]	; a[i] = 0
+ 175 00BA A2 A0		add		r2, r2, #1		; i++
+ 176           	fill_zero_while_ctrl:
+ 177 00BC A0 B8		cmp		r2, r1			; i < size
+ 178 00BE FC 4F		blo		fill_zero_while_body
+ 179 00C0 0F B7		mov		pc, lr
+ 180           		
+ 181           	/*
+ 182           	# define SIZE 5
+ 183           	uint16_t occurrences1 [ SIZE ];
+ 184           	uint16_t occurrences2 [ SIZE ];
+ 185           	uint8_t phrase1 [] = "hello , world ";
+ 186           	uint8_t phrase2 [] = "the quick brown fox jumps over the lazy dog";
+ 187           	*/	
+ 188           	/* Dados globais do programa iniciados
+ 189           	 */ 
+ 190           		.data
+ 191           	occurrences1:
+ 192 00C2 00   		.space	SIZE * 2
+ 192 .... ..
+ 192 00CB 00
+ 193           	occurrences2:
+ 194 00CC 00   		.space	SIZE * 2
+ 194 .... ..
+ 194 00D5 00
+ 195           	phrase1:
+ 196          		.asciz	"hello, world"
+ 196 00D6 68 65 6C 6C 6F 2C 20 77 6F 72 6C 64 00
+ 197           	phrase2:
+ 198          		.asciz 	"the quick brown fox jumps over the lazy dog"
+ 198 00E3 74 68 65 20 71 75 69 63 6B 20 62 72 6F 77 6E 20
+ 198 00F3 66 6F 78 20 6A 75 6D 70 73 20 6F 76 65 72 20 74
+ 198 0103 68 65 20 6C 61 7A 79 20 64 6F 67 00
+ 199           		
+ 200           		
+ 201           	/* Stack: pilha com dados tempor�rios
+ 202           	 */
+ 203          		.equ STACK_SIZE, 64
+ 204           		.section .stack
+ 205 0110 00   		.space STACK_SIZE
+ 205 .... ..
+ 205 014F 00
+ 206           	stack_top:
+ 206           	

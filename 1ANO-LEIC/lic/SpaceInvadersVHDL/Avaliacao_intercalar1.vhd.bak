@@ -1,0 +1,95 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.all;
+
+ENTITY avaliacao_intercalar1 IS
+PORT( 
+R: in std_logic; --Reset
+CLK : in std_logic;
+Lines: in std_logic_vector(3 downto 0);
+Collumns: out std_logic_vector(2 downto 0);
+D_Low: out std_logic_vector(3 downto 0);
+D_high: out std_logic_vector(3 downto 0);
+RS: out std_logic;
+EN: out std_logic
+);
+END avaliacao_intercalar1;
+
+ARCHITECTURE logicFunction OF avaliacao_intercalar1 IS
+
+component KeyboardReader
+port(
+R: in std_logic; --Reset
+CLK : in std_logic;
+ACK: in std_logic;
+Lines: in std_logic_vector(3 downto 0);
+Collumns: out std_logic_vector(2 downto 0);
+D_val: out std_logic;
+D: out std_logic_vector(3 downto 0)
+);
+end component;
+
+component UsbPort
+port(
+inputPort:  IN  STD_LOGIC_VECTOR(7 DOWNTO 0);
+outputPort :  OUT  STD_LOGIC_VECTOR(7 DOWNTO 0)
+);
+end component;
+
+component reg is
+port (
+CLK : in std_logic;
+RESET : in STD_LOGIC;  -- '0'
+D : IN STD_LOGIC_VECTOR(3 downto 0);
+EN : IN STD_LOGIC;
+Q : out std_logic_VECTOR(3 downto 0)
+);
+end component;
+
+signal s_clk, s_val, s_ack: std_logic;
+signal s_D, s_D_low_in, s_D_low_out : std_logic_vector(3 downto 0);
+
+BEGIN
+
+KEYBOARD_READER_INST0: KeyboardReader port map(
+R => R,
+CLK => CLK,
+ACK => s_ack,
+Lines => Lines,
+Collumns => Collumns, 
+D_val => s_val,
+D => s_D
+);
+
+USB_PORT_INST0: UsbPort port map(
+inputPort(3 downto 0) => s_D,
+inputPort(4) => s_val,
+inputPort(5) => '0',
+inputPort(6) => '0',
+inputPort(7) => '0',
+
+outputPort(3 downto 0) => s_D_low_in,
+outputPort(4) => s_clk,
+outputPort(5) => EN,
+outputPort(6) => RS,
+outputPort(7) => s_ack
+);
+
+REGISTER_LOW_INST0: reg port map(
+CLK => s_clk,
+RESET => R,
+D => s_D_low_in,
+EN => '1',
+Q => s_D_low_out
+);
+
+REGISTER_HIGH_INST0: reg port map(
+CLK => s_clk,
+RESET => R,
+D => s_D_low_out,
+EN => '1',
+Q => D_high
+);
+
+D_low <= s_D_low_out;
+
+END LogicFunction;

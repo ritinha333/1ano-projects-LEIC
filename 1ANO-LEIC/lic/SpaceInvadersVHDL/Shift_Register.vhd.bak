@@ -1,0 +1,77 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.all;
+
+entity SReg is
+port (
+Sin 	: in std_logic;
+S_PL 	: in std_logic; -- Shift/Write
+E 		: in std_logic;
+clr 	: in std_logic;
+clk 	: in std_logic;
+D		: in std_logic_vector(3 downto 0);
+Sout 	: out std_logic;
+Q 		: out std_logic_vector(3 downto 0)
+);
+END SReg;
+
+ARCHITECTURE logicFunction OF SReg IS
+
+component FFD
+PORT( 
+CLK : in std_logic;
+RESET : in STD_LOGIC;
+SET : in std_logic;
+D : IN STD_LOGIC;
+EN : IN STD_LOGIC;
+Q : out std_logic);
+end component;
+
+component MUX1
+PORT( 
+A : in STD_LOGIC;
+B : in STD_LOGIC;
+S : in std_logic;
+Y : out STD_LOGIC
+);
+end component;
+
+signal s_y0, s_y1, s_y2, s_y3, s_q3, s_q2, s_q1, s_q0 : std_logic;
+
+BEGIN
+
+MUX1_INST0: MUX1 port map ( 
+A => Sin, 
+B => D(3), 
+S => S_PL, 
+Y => s_y0);
+
+MUX1_INST1: MUX1 port map ( 
+A => s_q3, 
+B => D(2), 
+S => S_PL, 
+Y => s_y1);
+
+MUX1_INST2: MUX1 port map ( 
+A => s_q2, 
+B => D(1), 
+S => S_PL, 
+Y => s_y2);
+
+MUX1_INST3: MUX1 port map ( 
+A => s_q1, 
+B => D(0), 
+S => S_PL, 
+Y => s_y3);
+
+U0: FFD port map(CLK => clk, reset => clr, set => '0', D => s_y0, EN => E, Q => s_q3);
+U1: FFD port map(CLK => clk, reset => clr, set => '0', D => s_y1, EN => E, Q => s_q2);
+U2: FFD port map(CLK => clk, reset => clr, set => '0', D => s_y2, EN => E, Q => s_q1);
+U3: FFD port map(CLK => clk, reset => clr, set => '0', D => s_y3, EN => E, Q => s_q0);
+
+Q(0) <= s_q0;
+Q(1) <= s_q1;
+Q(2) <= s_q2;
+Q(3) <= s_q3;
+Sout <= s_q0;
+
+END LogicFunction;

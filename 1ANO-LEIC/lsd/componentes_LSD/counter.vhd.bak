@@ -1,0 +1,60 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+ 
+entity counter is
+ Port ( 
+   Data_in : in STD_LOGIC_VECTOR (3 downto 0);
+	CE, R, CLK: in STD_LOGIC;
+	Quo : out STD_LOGIC_VECTOR (3 downto 0)
+	);
+end counter;
+ 
+architecture count_up of counter is
+
+
+component Adder port(
+        A : in STD_LOGIC_VECTOR (3 downto 0);
+		  B : in STD_LOGIC_VECTOR (3 downto 0);
+		  Ci : in STD_LOGIC;
+		  Co : out STD_LOGIC;
+		  S : out STD_LOGIC_VECTOR (3 downto 0));
+end component;
+
+component mux2x1 port(
+        A, B: in std_logic_vector(3 downto 0);
+        S: in std_logic;
+        O: out std_logic_vector(3 downto 0));
+end component;
+
+component Reg port(
+        d: in std_logic_vector(3 downto 0);
+        clk, en: in std_logic;
+        q: out std_logic_vector(3 downto 0));
+end component;
+
+
+SIGNAL xAddout, xMuxout, xRegout: STD_LOGIC_VECTOR(3 DOWNTO 0);
+
+begin
+
+UAdder: Adder port map(
+		A => xRegout,
+		B =>"0000",  
+		Ci => CE,
+		S =>xAddout);
+		
+Umux: mux2x1 port map(
+		A => xAddout,
+		B => Data_in,  
+		S => R,
+		O => xMuxout);
+		
+UReg : Reg port map(
+		d => xMuxout, 	
+		en => '1',
+		clk => CLK,  
+		q => xRegout);
+		
+Quo<= xRegout;
+ 
+end count_up;

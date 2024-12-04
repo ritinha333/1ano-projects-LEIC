@@ -1,0 +1,262 @@
+<<<<<<< HEAD
+P16 assembler v1.5 (Feb  9 2024)	c:\Users\gonca\OneDrive\Documentos\Licenciatura\Arquitetura_de_Computadores\SV_23_24\labs\ComputerArchProj\TP1\TP1_versao2.lst	Tue Mar 19 12:32:22 2024
+=======
+P16 assembler v1.5 (Feb  9 2024)	c:\uni\LEIC 2 ANO\2semestre\AC\projects_AC\ComputerArchProj\TP1\TP1_versao2.lst	Mon Mar 18 07:33:24 2024
+>>>>>>> b7c543d4fb76a2c670003e52addc3c992339447c
+
+Sections
+Index   Name            Address   Size
+0       .startup        0000      0012 18
+1       .text           0012      00AA 170
+2       .data           00BC      0018 24
+3       .stack          00D4      0040 64
+
+Symbols
+Name                    Type      Value       Section
+_start                  LABEL     0004 4      .startup
+AMBAR_SCALE             ABSOLUTE  0001 1      .startup
+ambar_scale_addr        LABEL     00B4 180    .text
+color_histogram         LABEL     00BC 188    .data
+color_histogram_addr    LABEL     004C 76     .text
+color_scale             LABEL     0054 84     .text
+color_scale_else_if     LABEL     0072 114    .text
+color_scale_end         LABEL     007E 126    .text
+color_scale_if          LABEL     0066 102    .text
+color_scale_if_end      LABEL     007A 122    .text
+CRITICAL_TIME           ABSOLUTE  0096 150    .startup
+critical_time_addr      LABEL     00BA 186    .text
+GREEN_SCALE             ABSOLUTE  0000 0      .startup
+green_scale_addr        LABEL     00B6 182    .text
+line#15                 LABEL     000C 12     .startup
+line#9                  LABEL     0002 2      .startup
+main                    LABEL     0012 18     .text
+main_addr               LABEL     0010 16     .startup
+main_body               LABEL     001E 30     .text
+main_end                LABEL     003E 62     .text
+main_while              LABEL     002A 42     .text
+main_while_body         LABEL     002E 46     .text
+main_while_end          LABEL     0036 54     .text
+RED_SCALE               ABSOLUTE  0002 2      .startup
+red_scale_addr          LABEL     00B2 178    .text
+STACK_SIZE              ABSOLUTE  00FC 252    .data
+stack_top               LABEL     0114 276    .stack
+stack_top_addr          LABEL     000E 14     .startup
+test_color_scale        LABEL     0088 136    .text
+test_color_scale_end    LABEL     00A8 168    .text
+test_color_scale_for    LABEL     0098 152    .text
+test_color_scale_for_body LABEL     009C 156    .text
+test_color_scale_for_update LABEL     00A4 164    .text
+times                   LABEL     00C0 192    .data
+times_addr              LABEL     004E 78     .text
+U_INT16_T_10            ABSOLUTE  000A 10     .startup
+u_int16_t_10_addr       LABEL     0052 82     .text
+U_INT16_T_3             ABSOLUTE  0003 3      .startup
+u_int16_t_3_addr        LABEL     0050 80     .text
+WARNING_TIME            ABSOLUTE  012C 300    .startup
+warning_time_addr       LABEL     00B8 184    .text
+
+Code listing
+   1           	/* Secção de arranque: código de inicialização
+   2           	 * 1. Estabelece vetores (entry point após reset e de interrupção)
+   3           	 * 2. Inicia stack pointer
+   4           	 * 3. Chama main
+   5           	 * 4. Retém a execução do CPU após o retorno do main
+   6           	 */
+   7           		.section .startup
+   8 0000 01 58		b		_start
+   9 0002 FF 5B		b 		.
+  10           	_start:
+  11 0004 4D 0C		ldr		sp, stack_top_addr
+  12 0006 80 B7		mov		r0, pc
+  13 0008 0E A2		add		lr, r0, #4
+  14 000A 2F 0C		ldr		pc, main_addr
+  15 000C FF 5B		b 		.	
+  16           	stack_top_addr:
+  17 000E 14 01		.word stack_top
+  18           	main_addr:
+  19 0010 12 00		.word	main
+  20           	
+  21           		; //Constantes
+  22          		.equ    U_INT16_T_3, 3
+  23          		.equ    U_INT16_T_10, 10
+  24           	
+  25          	    .equ    RED_SCALE, 2
+  26          	    .equ    AMBAR_SCALE, 1
+  27          	    .equ    GREEN_SCALE, 0
+  28          	    .equ    WARNING_TIME, 300
+  29          	    .equ    CRITICAL_TIME, 150
+  30           	
+  31           		.text
+  32           	
+  33           	/* Output: r0 -> sempre 0
+  34           	*/	
+  35           	main:
+  36 0012 0E 24		push	lr							; salva LR se função não folha
+  37 0014 04 24		push    r4							; i
+  38 0016 05 24	    push    r5      					; color_histogram []   
+  39 0018 06 24	    push    r6      					; u_int16_t = 3
+  40 001A 07 24		push	r7							; times
+  41 001C 08 24		push	r8							; size -> 10
+  42           	
+  43           	main_body:
+  44 001E 04 60		mov		r4, #0						; i = 0	
+  45 0020 50 0D		ldr		r0, color_histogram_addr
+  46 0022 05 08		ldrb	r5, [r0]					; r5 = color_histogram
+  47 0024 56 0D		ldr		r6, u_int16_t_3_addr		; r6 = 3
+  48 0026 37 0D		ldr		r7, times_addr				; r7 = times
+  49 0028 48 0D		ldr		r8, u_int16_t_10_addr		; r8 = 10	// size
+  50           	
+  51           	main_while:
+  52 002A 40 BB		cmp		r4, r6						; se i >= 3 ent termina o while
+  53 002C 04 4C		blo		main_while_end
+  54           	
+  55           	main_while_body:
+  56 002E C4 A0		add     r4, r4, #1      			; i++
+  57 0030 55 3A	    strb    r5, [r5, r4]    			; r5 = colorhistogram[i++]
+  58 0032 05 60	    mov     r5, #0          			; r5 = colorhistogram[i++] = 0
+  59 0034 FA 5B		b		main_while
+  60           	
+  61           	main_while_end:
+  62           		; test_color_scale (r0, r1, r2)
+  63 0036 80 B3		mov		r0, r7 						; r0 = times
+  64 0038 81 B2		mov		r1, r5						; r1 = colorhistogram
+  65 003A 02 B4		mov		r2, r8						; r2 = 10  //size
+  66 003C 25 5C		bl 		test_color_scale
+  67           	
+  68           	main_end:
+  69 003E 00 60		mov		r0, #0						; retorna 0 em r0
+  70 0040 08 04		pop		r8
+  71 0042 07 04		pop		r7
+  72 0044 06 04		pop		r6
+  73 0046 05 04		pop 	r5
+  74 0048 04 04		pop		r4
+  75 004A 0F 04		pop		pc							; retorna desempilhando endereço de retorno se função não folha
+  76           	
+  77           	color_histogram_addr:
+  78 004C BC	    .byte 	color_histogram
+  79 004D 00  	    .align 	1
+  80           	
+  81           	times_addr:
+  82 004E C0 00	    .word 	times
+  83           	
+  84           	u_int16_t_3_addr:
+  85 0050 03 00	    .word   U_INT16_T_3
+  86           	
+  87           	u_int16_t_10_addr:
+  88 0052 0A 00	    .word   U_INT16_T_10
+  89           	
+  90           	; -----------------------------------------------------------------------------------------------------------------------
+  91           	/*
+  92           	Input: r0 = uint_16 -> t
+  93           	Output: r0 = uint_8 -> define qual scale
+  94           	*/
+  95           	color_scale:
+  96 0054 04 24		push	r4		;	t
+  97 0056 05 24		push 	r5		;	GREEN_SCALE
+  98 0058 06 24		push	r6		;	CRITICAL_TIME
+  99 005A 07 24		push	r7		;	WARNING_TIME
+ 100 005C 04 B0		mov		r4, r0	; 	r4 = r0 = t
+ 101 005E B5 0E		ldr		r5, green_scale_addr	;	r5 = GREEN_SCALE
+ 102 0060 C6 0E		ldr		r6, critical_time_addr	; 	r6 = CRITICAL_TIME
+ 103 0062 A7 0E		ldr		r7, warning_time_addr	;	r7 = WARNING_TIME
+ 104 0064 00 58		b		color_scale_if
+ 105           	
+ 106           	color_scale_if:
+ 107 0066 40 BB		cmp		r4, r6
+ 108 0068 04 4C		blo		color_scale_else_if		; se t < CRITICAL_TIME ent vai para o else if
+ 109 006A 70 BA		cmp		r7, r4					; caso contrário verifica o segundo boolean do if
+ 110 006C 02 4C		blo		color_scale_else_if		; se WARNING_TIME < t ent vai para o else if
+ 111 006E 25 0E		ldr		r5,	ambar_scale_addr	; caso contrario significa que a expressao boleana do if deu true, logo dizemos que c = ambar_scale
+ 112 0070 04 58		b		color_scale_if_end		; termina o if
+ 113           	
+ 114           	color_scale_else_if:
+ 115 0072 40 BB		cmp		r4, r6
+ 116 0074 02 48		bhs		color_scale_if_end		; se t >= CRITICAL_TIME ent termina o if devolvendo r1 com Green Scale
+ 117 0076 D5 0D		ldr		r5, red_scale_addr		; caso contrário ira devolver r1 com o valor de red Scale
+ 118 0078 00 58		b		color_scale_if_end		; termina o if
+ 119           	
+ 120           	color_scale_if_end:
+ 121 007A 80 B2		mov		r0, r5					; define r0 o valor de c
+ 122 007C 00 58		b		color_scale_end			; termina a funcao
+ 123           	
+ 124           	color_scale_end:
+ 125 007E 07 04		pop		r7
+ 126 0080 06 04		pop		r6
+ 127 0082 05 04		pop 	r5
+ 128 0084 04 04		pop		r4
+ 129 0086 0F B7		mov 	pc, lr					;	retorna para a instrucao seguinte onde a funcao (color_scale) foi chamada (para isso é necessário fazer bl do color scale)
+ 130           	; -----------------------------------------------------------------------------------------------------------------------
+ 131           	; Input: r0 = uint16_t array_t [] , r1 = uint8_t array_c [] , r2 = int16_t array_t_size
+ 132           	test_color_scale:
+ 133 0088 04 24		push	r4						; i
+ 134 008A 05 24		push	r5						; array_t []
+ 135 008C 06 24		push	r6						; array_c []
+ 136 008E 07 24		push	r7						; array_t_size
+ 137 0090 04 60		mov		r4, #0					; i = 0
+ 138 0092 05 B0		mov		r5, r0					; r5 = array_t []
+ 139 0094 86 B0		mov		r6, r1					; r6 = array_c []
+ 140 0096 07 B1		mov		r7, r2					; r7 = array_t_size
+ 141           	
+ 142           	test_color_scale_for:
+ 143 0098 40 B9		cmp		r4, r2 					; se i >= array_t_size termina a funcao
+ 144 009A 06 54		blt		test_color_scale_end
+ 145           	
+ 146           	test_color_scale_for_body:
+ 147 009C 50 12		ldr		r0, [r5, r4]			; r0 = t[i]
+ 148 009E DA 5F		bl		color_scale				
+ 149 00A0 00 28		strb	r0, [r0, #0]			; escreve em memória colorhistogram [retorno de color_scale]
+ 150 00A2 80 A0		add		r0, r0, #1				; c[retorno color_scale]++
+ 151           	
+ 152           	test_color_scale_for_update:
+ 153 00A4 C4 A0		add		r4, r4, #1				; i++
+ 154 00A6 F8 5B		b		test_color_scale_for
+ 155           	
+ 156           	test_color_scale_end:
+ 157 00A8 07 04		pop		r7
+ 158 00AA 06 04		pop		r6
+ 159 00AC 05 04		pop		r5
+ 160 00AE 04 04		pop 	r4
+ 161 00B0 0F B7		mov		pc, lr
+ 162           	
+ 163           	/* Defenicao dos dados do programa
+ 164           	*/
+ 165           	
+ 166           	red_scale_addr:
+ 167 00B2 02 00	    .word   RED_SCALE
+ 168           	
+ 169           	ambar_scale_addr:
+ 170 00B4 01 00	    .word   AMBAR_SCALE
+ 171           	
+ 172           	green_scale_addr:
+ 173 00B6 00 00	    .word   GREEN_SCALE
+ 174           	
+ 175           	warning_time_addr:
+ 176 00B8 2C 01	    .word   WARNING_TIME
+ 177           	
+ 178           	critical_time_addr:
+ 179 00BA 96 00	    .word   CRITICAL_TIME
+ 180           	
+ 181           	/* Dados globais do programa iniciados
+ 182           	 */ 
+ 183           		.data
+ 184           	
+ 185           	color_histogram:
+ 186 00BC 00   	    .space U_INT16_T_3
+ 186 00BD 00
+ 186 00BE 00
+ 187 00BF 00  		.align 1
+ 188           	
+ 189           	times:
+ 190          	    .word 65535, 500, 301, 300, 299, 151, 150, 149, 1, 0
+ 190 00C0 FF FF F4 01 2D 01 2C 01 2B 01 97 00 96 00 95 00
+ 190 00D0 01 00 00 00
+ 191           	
+ 192           	/* Stack: pilha com dados temporários
+ 193           	 */
+ 194          		.equ STACK_SIZE, 64
+ 195           		.section .stack
+ 196 00D4 00   		.space STACK_SIZE
+ 196 .... ..
+ 196 0113 00
+ 197           	stack_top:
+ 197           	

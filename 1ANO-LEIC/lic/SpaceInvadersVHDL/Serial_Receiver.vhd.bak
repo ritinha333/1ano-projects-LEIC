@@ -1,0 +1,92 @@
+LIBRARY IEEE;
+use IEEE.std_logic_1164.all;
+
+entity Serial_Receiver is 
+port(	SDX: in std_logic;
+		SLCK: in std_logic;
+		SS: in std_logic;
+		R: in std_logic;
+		D: out std_logic_vector (8 downto 0);
+		DX_val: out std_logic
+);
+
+end Serial_Receiver;
+ 
+architecture ARQ_Serial_Receiver of Serial_Receiver is
+
+component Serial_Control is
+port(	enRx: in std_logic;
+		accept: in std_logic;
+		pFlag: in std_logic;
+		dFlag: in std_logic;
+		HXerror: in std_logic;
+		wr: out std_logic;
+		init: out std_logic;
+		Dx_val_c: out std_logic
+);
+
+end Serial_Control;
+
+component Parity_Check is
+port( data: in std_logic;
+		init: in std_logic;
+		clk: in std_logic;
+		err: out std_logic
+);
+
+end Parity_Check;
+
+component Shift_Register is 
+port( data: in std_logic;
+		enableShift: in std_logic;
+		clk: in std_logic;
+		D: out std_logic_vector (8 downto 0)
+);
+
+end Shift_Register;
+
+component Counter
+port(	R: in std_logic;
+		PL: in std_logic; 										-- Parallel Load;
+		CE: in std_logic; 										-- Count Enable;
+		CLK: in std_logic;
+		terminalValue: in std_logic_vector(1 downto 0);
+		Q: out std_logic_vector(1 downto 0);
+		TC: out std_logic 	
+);	
+end Counter;
+
+signal s_wr, s_err, s_init, s_accept, s_counter_ten, s_counter_nine : std_logic;
+signal s_tc : std_logic;
+
+
+begin
+
+SERIAL_CONTROL_INST0: Serial_Control port map(
+	enRx => SS,
+	accept => s_accept,
+	pFlag => s_counter_ten, 
+	dFlag => s_counter_nine,
+	HXerror => s_err,
+	wr => s_wr,
+	init => s_init,
+	Dx_val_c => DX_val
+);
+
+PARITY_CHECK_INS0: Parity_Check port map(
+	data => SDX,
+	init => s_init,
+	clk => SCLK,
+	err => s_err
+);
+
+SHIFT_REGISTER_INST0: Shift_Register port map(
+	data => SDX,
+	enableShift => s_wr,
+	clk => SCLK,
+	D => D
+);
+
+COUNTER_INST0: Counter port map(
+	R => R,
+	PL => s_tc, 

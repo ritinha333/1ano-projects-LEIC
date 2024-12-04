@@ -1,0 +1,21 @@
+P16 assembler v1.5 (Feb  9 2024)	c:\uni\LEIC 2 ANO\2semestre\AC\projects_AC\ComputerArchProj\TP4\DADE.lst	Fri Jun 28 09:12:54 2024
+
+Sections
+Index   Name            Address   Size
+0       .text           0000      0008 8
+
+Symbols
+Name                    Type      Value       Section
+end                     LABEL     0006 6      .text
+line#4                  LABEL     0004 4      .text
+start                   LABEL     0000 0      .text
+
+Code listing
+   1           	start:
+   2 0000 20 0C	    ldr r0, end
+   3 0002 61 60	    mov r1, #end
+   4 0004 FF 5B	b .
+   5           	
+   6           	end:
+   7 0006 00 00	    .word start
+   7           	

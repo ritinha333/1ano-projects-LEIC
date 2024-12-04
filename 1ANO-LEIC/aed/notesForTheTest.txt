@@ -1,0 +1,46 @@
+
+    Técnicas de Algoritmia:
+    - Brute Force
+    - Greedy
+    - Dynamic Programming
+    - Divide and Conquer
+
+    Brute Force: é o método menos eficiente dos quatro uma vez que quando implementado faz a comparação entre 
+    todos os elementos, fazendo comparações repetidas. Gera todas as combinações possíveis.
+
+    Greedy: é um método que se baseia a cada passo escolher a melhor solução parcial do problema, estando cada
+    passo mais perto da solução. Esta solução deve ser a mais eficiente de todas, a qual chega mais rápido à 
+    solução.
+
+    Dynamic Programming: é uma técnica que se baseia em dividir o problema em sub-problemas, cada soloção será
+    posteriormente colocada num array. Técnica de space-for-time trade-off -> troca espaço por tempo
+
+    Divide and Conquer: Divide o problema em sub-problemas, resolve-os recursivamente e posteriormente combina
+    as soluções, tendo a solução para o problema original
+
+    BinarySearch é um algoritmo que permite encontrar a posição dum elemento num array ordenado -> usa a técnica
+    de divide and conquer.
+
+    Algoritmos de ordenação elementares:
+    
+        Bubble Sort: relação de flutuação, começa pelo fim a comparar cada elemento com o seu vizinho, cada
+        passagem menos 1 vez.
+        O bubble sort é mais eficiente quando se sabe que se faz menos trocas.
+
+        Selection Sort: repetição de seleção do menor elemento em relação aos outros. Organizar pessoas de uma
+        certa altura. 
+            Array[5,4,1,9,8,7,3,2]
+            - Verifica qual o menor do array, menor = 1, logo troca o valor da primeira posição com o 1, logo 
+            o 5 troca com o 1 e sucessivamente para todos os outros elementos, até ter uma lista ordenada.
+        O selection sort é mais eficiente para arrays de grande dimensão pois faz menos trocas que o bubble sort.
+
+        Insertion Sort: inserção de cada elemento na sua posição correta. Analogia do baralho de cartas: quando 
+        queremos colocar as carta de forma ordenada, inserimo-las de forma a o estarem.
+        Caso o array esteja praticamente ordenado, este algoritmo é o mais eficiente pois faz o menor valor de trocas.
+
+        Adaptativos: Insertion sort e bubble sort com o uso duma flag
+
+        Estáveis: Bubble sort e o Insertion sort
+
+    Merge Sort: Aplica a técnica divide and conquer. Divide o array original até os arrays terem dimensão 1. Quando os~
+    arrays têm dimensão 1 significa que estão ordenados. Combina os resultados de modo inverso, juntando as metades 

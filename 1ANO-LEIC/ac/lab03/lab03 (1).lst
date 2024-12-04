@@ -1,0 +1,157 @@
+P16 assembler v1.5 (Feb  9 2024)	c:\uni\LEIC 2 ANO\2semestre\AC\labs_code\Computer-Architecture-Class\lab03\lab03 (1).lst	Mon May 06 14:38:46 2024
+
+Sections
+Index   Name            Address   Size
+0       startup         0000      000E 14
+1       .text           000E      004E 78
+2       .data           005C      0008 8
+3       .stack          0064      0040 64
+
+Symbols
+Name                    Type      Value       Section
+INPORT_ADDRESS          ABSOLUTE  FF80 65408  startup
+inport_read             LABEL     0038 56     .text
+line#24                 LABEL     0008 8      startup
+loop                    LABEL     0018 24     .text
+main                    LABEL     000E 14     .text
+main_addr               LABEL     000C 12     startup
+OUTPORT_ADDRESS         ABSOLUTE  FFC0 65472  startup
+outport_write           LABEL     0040 64     .text
+rithm_arr               LABEL     005C 92     .data
+rithm_arr_addr          LABEL     005A 90     .text
+sleep                   LABEL     0048 72     .text
+sleep_end               LABEL     0058 88     .text
+sleep_inner_loop        LABEL     0050 80     .text
+sleep_outer_loop        LABEL     004C 76     .text
+STACK_SIZE              ABSOLUTE  0040 64     startup
+stack_top               LABEL     00A4 164    .stack
+stack_top_addr          LABEL     000A 10     startup
+
+Code listing
+   1           	; Ficheiro:  lab03.S
+   2           	; Descricao: Programa para a realização da 3a atividade laboratorial de
+   3           	;            Arquitetura de Computadores.
+   4           	; Autor:     Tiago M Dias (tiago.dias@isel.pt)
+   5           	; Data:      18-04-2024
+   6           	
+   7           	; Definicao dos valores dos simbolos utilizados no programa
+   8           	;
+   9          		.equ	STACK_SIZE, 64                ; Dimensao do stack
+  10           	
+  11           	; *** Início de zona para completar ***
+  12          		.equ	INPORT_ADDRESS, 0xFF80  		; Endereço inicial do porto de entrada SDP16
+  13          		.equ	OUTPORT_ADDRESS, 0xFFC0       	; Endereço inicial do porto de saída SDP16
+  14           	; *** Final de zona para completar  ***
+  15           	
+  16           	; Seccao:    startup
+  17           	; Descricao: Guarda o código de arranque do sistema
+  18           	;
+  19           		.section startup
+  20 0000 4D 0C		ldr		sp, stack_top_addr
+  21 0002 80 B7	    mov 	r0, pc
+  22 0004 0E A2	    add 	lr, r0, #4
+  23 0006 2F 0C		ldr		pc, main_addr
+  24 0008 FF 5B	    b   .
+  25           	
+  26           	stack_top_addr:
+  27 000A A4 00		.word	stack_top
+  28           	main_addr:
+  29 000C 0E 00		.word	main
+  30           	
+  31           	; Seccao:    text
+  32           	; Descricao: Guarda o código do programa
+  33           	;
+  34           		.text
+  35           	
+  36           	; Rotina:    main
+  37           	; Descricao: Faz a leitura e escrita nos portos paralelos, de entrada e saída respetivamente, da placa SDP16
+  38           	; Entradas:  *** Para completar ***
+  39           	; Saidas:    *** Para completar ***
+  40           	; Efeitos:   *** Para completar ***
+  41           	main:
+  42 000E 0E 24		push	lr
+  43 0010 F0 6F		mov		r0, #0xFF
+  44 0012 16 5C		bl		outport_write
+  45 0014 00 60		mov		r0, #0x00
+  46 0016 14 5C		bl		outport_write
+  47           	loop:
+  48 0018 10 60		mov 	r0, #1
+  49 001A 16 5C		bl 		sleep
+  50 001C 00 68		mov 	r0, #0x80		
+  51 001E 10 5C		bl 		outport_write
+  52 0020 0B 5C		bl		inport_read
+  53 0022 02 B0		mov 	r2, r0		
+  54 0024 01 68		mov 	r1, #0x80	
+  55 0026 80 C0		and		r0, r0, r1
+  56 0028 F7 47		bne 	loop
+  57 002A 71 0D		ldr 	r1, rithm_arr_addr
+  58 002C 10 19		ldrb 	r0, [r1, r2]
+  59 002E 0C 5C		bl 		sleep
+  60 0030 10 68		mov 	r0, #0x81	
+  61 0032 06 5C		bl		outport_write
+  62 0034 F1 5B		b		loop
+  63 0036 0F 04		pop		pc
+  64           	
+  65           	; Rotina:    inport_read
+  66           	; Descricao: Lê do porto de entrada o valor lá presente e coloca-o num registo
+  67           	; Entradas:  -
+  68           	; Saidas:    r0 - Byte lido do porto de entrada
+  69           	; Efeitos:   r1 - Colocou r1 todo a 0xFFFF
+  70           	inport_read:
+  71 0038 01 68		mov		r1, #INPORT_ADDRESS & 0xFF
+  72 003A F1 7F		movt	r1, #INPORT_ADDRESS >> 8 & 0xFF
+  73 003C 10 08		ldrb	r0, [r1, #0]
+  74 003E 0F B7		mov		pc, lr
+  75           	
+  76           	; Rotina:    outport_write
+  77           	; Descricao: De acordo uma valor específico escreve um byte no porto de saída
+  78           	; Entradas:  r0 - valor a escrever no porto
+  79           	; Saidas:    -
+  80           	; Efeitos:   r1 - Colocou r1 todo a 0xFFFF
+  81           	outport_write:
+  82 0040 01 6C		mov		r1, #OUTPORT_ADDRESS & 0xFF
+  83 0042 F1 7F		movt	r1, #OUTPORT_ADDRESS >> 8 & 0xFF
+  84 0044 10 28		strb	r0, [r1, #0]
+  85 0046 0F B7		mov		pc, lr
+  86           	
+  87           	; Rotina:    sleep
+  88           	; Descricao: De acordo os valores presentes em r0 e r1, a rotina sleep fica em dois loops até que
+  89           	;			 tanto r0 e r1 sejam zero e a flag z = 1, logo é uma rotina que faz o programa esperar
+  90           	;			 ficando o mesmo em modo "repouso".
+  91           	; Entradas:  r0
+  92           	; Saidas:    -
+  93           	; Efeitos:   r1 - Colocar r1 a 0x033E
+  94           	sleep:
+  95 0048 00 C0		and		r0, r0, r0			; r0 = r0 & r0
+  96 004A 06 40		beq		sleep_end			; if z = 1 then pc = label 
+  97           	sleep_outer_loop:
+  98 004C E1 63		mov		r1, #0x3E			; r1 = 0x003E
+  99 004E 31 70		movt	r1, #0x03			; r1 = 0x033E
+ 100           	sleep_inner_loop:
+ 101 0050 91 A8		sub		r1, r1, #1			; r1 = 033E - 1 = 033D
+ 102 0052 FE 47		bne		sleep_inner_loop	; if z = 0 then pc = label (fica aqui até r1 ter o valor de 0)
+ 103 0054 80 A8		sub		r0, r0, #1			; r0 = r0 - 1
+ 104 0056 FA 47		bne		sleep_outer_loop	; if z = 0 then pc = label (fica aqui até r1 ter o valor de 0)
+ 105           	sleep_end:
+ 106 0058 0F B7		mov		pc, lr				; função folha
+ 107           	
+ 108           	; Seccao:    data
+ 109           	; Descricao: Guarda as variáveis globais
+ 110           	
+ 111           	rithm_arr_addr:
+ 112 005A 5C 00		.word rithm_arr
+ 113           	
+ 114           		.data
+ 115           	
+ 116           	rithm_arr:
+ 117          		.byte 	5, 10, 15, 20, 25, 30, 35, 40
+ 117 005C 05 0A 0F 14 19 1E 23 28
+ 118           	; Seccao:    stack
+ 119           	; Descricao: Implementa a pilha com o tamanho definido pelo simbolo STACK_SIZE
+ 120           	;
+ 121           		.stack
+ 122 0064 00   		.space	STACK_SIZE
+ 122 .... ..
+ 122 00A3 00
+ 123           	stack_top:
+ 123           	

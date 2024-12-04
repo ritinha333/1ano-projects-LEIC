@@ -1,0 +1,808 @@
+P16 assembler v1.5 (Feb  9 2024)	c:\uni\LEIC 2 ANO\2semestre\AC\labs_code\Computer-Architecture-Class\Trabalho Pr�tico 4\auxiliar.lst	Mon May 27 17:16:56 2024
+
+Sections
+Index   Name            Address   Size
+0       startup         0000      0014 20
+1       .text           0014      025A 602
+2       .data           026E      0011 17
+3       .stack          0280      0040 64
+
+Symbols
+Name                    Type      Value       Section
+_start                  LABEL     0004 4      startup
+ARRAY_MASK              ABSOLUTE  0007 7      startup
+ARRAY_POS               ABSOLUTE  0003 3      startup
+BLINK_TIME              ABSOLUTE  0005 5      startup
+button_state            LABEL     026E 622    .data
+button_state_addr       LABEL     0158 344    .text
+case_config             LABEL     00B4 180    .text
+case_config_l0          LABEL     00DC 220    .text
+case_crossing_cars      LABEL     0046 70     .text
+case_crossing_cars_l0   LABEL     0074 116    .text
+case_crossing_cars_l1   LABEL     0078 120    .text
+case_crossing_pedestrians LABEL     007C 124    .text
+case_crossing_pedestrians_l0 LABEL     00AC 172    .text
+case_crossing_pedestrians_l1 LABEL     00B0 176    .text
+CONFIG_MASK             ABSOLUTE  0010 16     startup
+CONFIG_POS              ABSOLUTE  0004 4      startup
+CONFIG_ST               ABSOLUTE  0004 4      startup
+CROSSING_CARS_ST        ABSOLUTE  0000 0      startup
+CROSSING_PEDESTRIAN_ST  ABSOLUTE  0002 2      startup
+crossing_times          LABEL     0274 628    .data
+crossing_times_addr     LABEL     010E 270    .text
+detect_raising_edge     LABEL     0142 322    .text
+detect_raising_edge_l0  LABEL     0154 340    .text
+ENABLE_EXTINT           ABSOLUTE  0010 16     startup
+evaluate_state_cars     LABEL     0174 372    .text
+evaluate_state_cars_l0  LABEL     0188 392    .text
+evaluate_state_cars_l1  LABEL     0184 388    .text
+evaluate_state_config   LABEL     018A 394    .text
+evaluate_state_config_l0 LABEL     019E 414    .text
+evaluate_state_config_l1 LABEL     019A 410    .text
+get_config              LABEL     0208 520    .text
+get_pedestrian_button   LABEL     0200 512    .text
+get_time                LABEL     0210 528    .text
+inport_addr             LABEL     021E 542    .text
+INPORT_ADDRESS          ABSOLUTE  FF80 65408  startup
+inport_read             LABEL     0218 536    .text
+isr                     LABEL     00F4 244    .text
+isr_addr                LABEL     0012 18     startup
+LED0_MASK               ABSOLUTE  0001 1      startup
+LED7_MASK               ABSOLUTE  0080 128    startup
+led_state               LABEL     026F 623    .data
+led_state_addr          LABEL     0110 272    .text
+line#134                LABEL     000C 12     startup
+main                    LABEL     0014 20     .text
+main_addr               LABEL     0010 16     startup
+main_branch_table       LABEL     003E 62     .text
+main_loop               LABEL     002A 42     .text
+MODE_G_MASK             ABSOLUTE  0020 32     startup
+MODE_R_MASK             ABSOLUTE  0010 16     startup
+ONE                     ABSOLUTE  0001 1      startup
+outport_addr            LABEL     0250 592    .text
+OUTPORT_ADDRESS         ABSOLUTE  FFC0 65472  startup
+outport_clear_bits      LABEL     022E 558    .text
+outport_img             LABEL     0272 626    .data
+outport_img_addr        LABEL     0248 584    .text
+outport_init            LABEL     023E 574    .text
+OUTPORT_INIT_VAL        ABSOLUTE  0000 0      startup
+outport_set_bits        LABEL     0220 544    .text
+outport_write           LABEL     024A 586    .text
+PEDESTRIAN_BUTTON_MASK  ABSOLUTE  0001 1      startup
+PEDESTRIAN_BUTTON_POS   ABSOLUTE  0000 0      startup
+PEDESTRIAN_LIGHT_G_MASK ABSOLUTE  0008 8      startup
+PEDESTRIAN_LIGHT_R_MASK ABSOLUTE  0004 4      startup
+ptc_addr                LABEL     0140 320    .text
+PTC_ADDRESS             ABSOLUTE  FF40 65344  startup
+ptc_clr_irq             LABEL     013A 314    .text
+PTC_CMD_START           ABSOLUTE  0000 0      startup
+PTC_CMD_STOP            ABSOLUTE  0001 1      startup
+ptc_get_value           LABEL     0134 308    .text
+ptc_init                LABEL     0112 274    .text
+ptc_start               LABEL     0124 292    .text
+ptc_stop                LABEL     012C 300    .text
+PTC_TC                  ABSOLUTE  0004 4      startup
+PTC_TCR                 ABSOLUTE  0000 0      startup
+PTC_TIR                 ABSOLUTE  0006 6      startup
+PTC_TMR                 ABSOLUTE  0002 2      startup
+STACK_SIZE              ABSOLUTE  0040 64     startup
+stack_top               LABEL     02C0 704    .stack
+stack_top_addr          LABEL     000E 14     startup
+state_time              LABEL     027E 638    .data
+state_time_addr         LABEL     0044 68     .text
+state_time_addr1        LABEL     00E0 224    .text
+SWI7                    ABSOLUTE  0080 128    startup
+sysclk                  LABEL     0270 624    .data
+sysclk_addr             LABEL     010C 268    .text
+SYSCLK_FREQ             ABSOLUTE  0063 99     startup
+sysclk_get_ticks        LABEL     00EE 238    .text
+sysclk_init             LABEL     00E2 226    .text
+TIME_MASK               ABSOLUTE  00E0 224    startup
+TIME_POS                ABSOLUTE  0005 5      startup
+timeout                 LABEL     015A 346    .text
+TIMEOUT                 ABSOLUTE  0005 5      startup
+timeout_blink           LABEL     0252 594    .text
+timeout_blink_end       LABEL     026A 618    .text
+timeout_l0              LABEL     0170 368    .text
+TRAFFIC_LIGHT_G_MASK    ABSOLUTE  0002 2      startup
+TRAFFIC_LIGHT_R_MASK    ABSOLUTE  0001 1      startup
+turn_cars_green_on      LABEL     01C4 452    .text
+turn_cars_off           LABEL     01DC 476    .text
+turn_cars_red_on        LABEL     01A0 416    .text
+turn_cars_yellow_on     LABEL     01F4 500    .text
+turn_mode_yellow_on     LABEL     01B8 440    .text
+turn_pedestrians_green_on LABEL     01D0 464    .text
+turn_pedestrians_off    LABEL     01E8 488    .text
+turn_pedestrians_red_on LABEL     01AC 428    .text
+ZERO                    ABSOLUTE  0000 0      startup
+
+Code listing
+   1           	
+   2           	
+   3           	/*
+   4           	
+   5           	fun caseConfig(){
+   6           		turnL1yeallow()	
+   7           		turnL2green()
+   8           		turnL3yellow()
+   9           		if(config == '0') case_crossing_cars
+  10           		else{
+  11           			val timeout = timeout
+  12           			if(timeout == '0') case_config
+  13           			else{
+  14           				evaluate_state_config()
+  15           				getTimeref
+  16           				if(state == '1') {
+  17           					clrBitsL1AndL2
+  18           					getTimeref
+  19           					case_config
+  20           					}
+  21           				else {
+  22           					setBitsL1AndL2
+  23           					getTimeref
+  24           					case_config
+  25           					}
+  26           			}
+  27           		}
+  28           	}
+  29           	*/
+  30           	
+  31           	
+  32           	/*
+  33           	fun casePedestrians(){
+  34           		turn_cars_red_on()
+  35           		turn_pedestrians_green_on()
+  36           		if(config == '1') case_config
+  37           		else {
+  38           			val timeout = timeou_blink()
+  39           			if(timeout == '1') case_crossing_cars
+  40           			else {
+  41           				if(button == '0'){
+  42           					take_timeref 
+  43           					case_pedestrians
+  44           				} 
+  45           				else case_pedestrians
+  46           			}
+  47           		}
+  48           	}
+  49           	*/
+  50           	
+  51           	; Definicao dos valores dos simbolos utilizados no programa
+  52           	;
+  53          		.equ	ENABLE_EXTINT, 0x10          ; Mascara para o bit I do registo CPSR
+  54           	
+  55          		.equ	STACK_SIZE, 64                ; Dimensao do stack - 64 B
+  56           	
+  57           		; Definicoes do porto de entrada
+  58          		.equ	INPORT_ADDRESS, 0xFF80        ; Endereco do porto de entrada
+  59           	
+  60           		; Definicoes do porto de saida
+  61          		.equ	OUTPORT_ADDRESS, 0xFFC0       ; Endereco do porto de saida
+  62           	
+  63          		.equ	OUTPORT_INIT_VAL, 0           ; Valor inicial do porto de saida
+  64           	
+  65           		; Definicoes do circuito pTC
+  66           	; *** Inicio de troco para completar ***
+  67          		.equ	PTC_ADDRESS,  0xFF40          ; Endereco do circuito pTC
+  68           	; *** Fim de troco para completar ***
+  69           	
+  70          		.equ	PTC_TCR, 0                    ; Deslocamento do registo TCR do pTC
+  71          		.equ	PTC_TMR, 2                    ; Deslocamento do registo TMR do pTC
+  72          		.equ	PTC_TC,  4                    ; Deslocamento do registo TC do pTC
+  73          		.equ	PTC_TIR, 6                    ; Deslocamento do registo TIR do pTC
+  74           	
+  75          		.equ	PTC_CMD_START, 0              ; Comando para iniciar a contagem no pTC
+  76          		.equ	PTC_CMD_STOP, 1               ; Comando para parar a contagem no pTC
+  77           	
+  78           	; *** Inicio de troco para completar ***
+  79          		.equ	SYSCLK_FREQ, 0x63             ; Módulo 99 - Intervalo de contagem do circuito pTC
+  80           	                                          ; que suporta a implementação do sysclk
+  81           	; *** Fim de troco para completar ***
+  82           	
+  83           		; Outras definicoes
+  84          		.equ	LED0_MASK, 1                  ; Mascara para o LED O0 da placa SDP16
+  85          	    .equ	LED7_MASK, 128                  ; Mascara para o LED O7 da placa SDP16
+  86           	
+  87           	; *** Inicio de troco para completar ***
+  88          		.equ	BLINK_TIME, 5                 ; ??
+  89          		.equ	TIMEOUT, 	5
+  90          		.equ	ARRAY_MASK, 0x07
+  91          		.equ	ARRAY_POS, 0x03
+  92          	    .equ    SWI7, 128
+  93           	
+  94           	
+  95           	; Constantes referentes ao porto de entrada e saída
+  96          	    .equ    PEDESTRIAN_BUTTON_MASK, 0x01
+  97          	    .equ    PEDESTRIAN_BUTTON_POS,  0
+  98          	    .equ    CONFIG_MASK,            0x10
+  99          	    .equ    CONFIG_POS,             4
+ 100          	    .equ    TIME_MASK,              0xE0
+ 101          	    .equ    TIME_POS,               5
+ 102          	    .equ    TRAFFIC_LIGHT_R_MASK,   0x01
+ 103          	    .equ    TRAFFIC_LIGHT_G_MASK,   0x02
+ 104          		.equ	PEDESTRIAN_LIGHT_R_MASK, 0x04
+ 105          		.equ 	PEDESTRIAN_LIGHT_G_MASK, 0x08
+ 106          		.equ 	MODE_R_MASK,			 0x10
+ 107          		.equ 	MODE_G_MASK,			 0x20
+ 108           	
+ 109           	
+ 110           	; Estados da aplicação
+ 111          	    .equ    CROSSING_CARS_ST,          0
+ 112          	    .equ    CROSSING_PEDESTRIAN_ST,    2
+ 113          	    .equ    CONFIG_ST,                 4
+ 114           	
+ 115           	; Constantes auxiliares
+ 116          		.equ 	ZERO,						0
+ 117          		.equ 	ONE,						1
+ 118           	
+ 119           	
+ 120           	
+ 121           	; *** Fim de troco para completar ***
+ 122           	
+ 123           	; Seccao:    startup
+ 124           	; Descricao: Guarda o código de arranque do sistema
+ 125           	;
+ 126           		.section startup
+ 127 0000 01 58		b	_start
+ 128 0002 7F 0C		ldr	pc, isr_addr
+ 129           	_start:
+ 130 0004 4D 0C		ldr	sp, stack_top_addr
+ 131 0006 80 B7	    mov r0, pc
+ 132 0008 0E A2	    add lr, r0, #4
+ 133 000A 2F 0C		ldr	pc, main_addr
+ 134 000C FF 5B	    b   .
+ 135           	stack_top_addr:
+ 136 000E C0 02		.word stack_top
+ 137           	main_addr:
+ 138 0010 14 00		.word	main
+ 139           	isr_addr:
+ 140 0012 F4 00		.word	isr
+ 141           	
+ 142           	    .text
+ 143           	
+ 144           		
+ 145           	main:
+ 146 0014 04 24	    push    r4                      ; Estado atual
+ 147 0016 05 24	    push    r5                      ; Imagem do inport_read
+ 148 0018 06 24	    push    r6                      ; Referência do clock
+ 149 001A 07 24	    push    r7                      ; aux
+ 150 001C 04 60	    mov     r4, #CROSSING_CARS_ST   ; Estado atual = CROSSING_CARS_ST
+ 151 001E 30 66	    mov     r0, #SYSCLK_FREQ        ; Decidir qual o clock que vamos usar para alterar este valor
+ 152 0020 60 5C	    bl      sysclk_init             ; Inicializar o clock
+ 153 0022 60 B0	    mrs		r0, cpsr
+ 154 0024 01 61		mov		r1, #ENABLE_EXTINT
+ 155 0026 80 C8		orr		r0, r0, r1
+ 156 0028 40 B0		msr		cpsr, r0
+ 157           	main_loop:
+ 158 002A C1 0C		ldr		r1, state_time_addr
+ 159 002C 11 00		ldr		r1, [r1]				; Iniciar a variável state para 0
+ 160 002E 02 60		mov		r2, #ZERO
+ 161 0030 12 20		str		r2, [r1]				; Colocar o state a zero inicialmente
+ 162           		;referência do tempo
+ 163 0032 5D 5C		bl 		sysclk_get_ticks					
+ 164 0034 06 B0		mov 	r6, r0					;Referência do tempo atual
+ 165 0036 F0 5C	    bl      inport_read             ; Ler o porto de leitura
+ 166 0038 05 B0	    mov     r5, R0                  ; r5 = imagem do porto de entrada
+ 167 003A 05 5C	    bl      case_crossing_cars      ; Arranque do sistema => case_crossing_cars
+ 168 003C CF 87	    add     pc, r4, pc              ; Incrementar o program counter com o valor de acordo o branch a ser efetuado
+ 169           	main_branch_table:
+ 170 003E 03 58	    b       case_crossing_cars
+ 171 0040 1D 58	    b       case_crossing_pedestrians
+ 172 0042 38 58	    b       case_config
+ 173           	
+ 174           	state_time_addr:
+ 175 0044 7E 02		.word 	state_time
+ 176           	
+ 177           	case_crossing_cars:
+ 178 0046 BE 5C		bl 		turn_cars_green_on					; L1 a verde
+ 179 0048 B1 5C		bl		turn_pedestrians_red_on				; L2 a vermelho
+ 180 004A B6 5C		bl 		turn_mode_yellow_on					; L3 a amarelo
+ 181           		;mov		r1, #CONFIG_MASK					
+ 182           		;and		r0, r5, r1							; De acordo a imagem do porto de entrada vê a config
+ 183 004C 80 B2		mov		r0, r5
+ 184 004E DC 5C		bl 		get_config							; De acordo a imagem do porto de entrada vê a config
+ 185 0050 01 60		mov 	r1, #ZERO							; r1 = 0
+ 186 0052 80 B8		cmp 	r0, r1								; r0 - r1
+ 187 0054 0F 44		bne		case_crossing_cars_l0				; se r0 != r1 -> vai para estado config, caso contrário vai continuar testando o button
+ 188           		;mov		r1, #PEDESTRIAN_BUTTON_MASK			
+ 189           		;and		r0, r5, r1							; De acordo a imagem do porto de entrada vê a button 
+ 190 0056 80 B2		mov		r0, r5
+ 191 0058 D3 5C		bl 		get_pedestrian_button
+ 192 005A 73 5C		bl		detect_raising_edge					; de acordo com o valor now ele verifica se houve uma transição ascedente retornando true
+ 193 005C 11 60		mov		r1, #ONE
+ 194 005E 10 B8		cmp		r1, r0								; r1(1) - r0 (1 ou 0)
+ 195 0060 0B 40		bzs 	case_crossing_cars_l1				;se houve raising_edge ele passa para o estado seguinte (r0 -> true == ONE) muda de estado
+ 196 0062 00 B3		mov		r0, r6								; r0 = referência do tempo
+ 197 0064 51 60		mov 	r1, #BLINK_TIME						; r1 = #BLINK_TIME
+ 198 0066 F5 5C		bl 		timeout_blink						; testar timeout_blink
+ 199 0068 B1 0F		ldr		r1, state_time_addr1
+ 200 006A 11 00		ldr		r1, [r1]							; variável state referente ao tempo
+ 201 006C 83 5C		bl 		evaluate_state_cars					; avalia o state do tempo baseado no timeout
+ 202 006E 3F 5C		bl 		sysclk_get_ticks					; Tirar nova referência de tempo
+ 203 0070 06 B0		mov 	r6, r0								; Referência do tempo atual
+ 204 0072 E9 5B		b 		case_crossing_cars					; continua neste caso até que config a '0' e button a '1' ou config a '1'
+ 205           	case_crossing_cars_l0:
+ 206 0074 44 60		mov		r4, #CONFIG_ST
+ 207 0076 D9 5B		b		main_loop
+ 208           	case_crossing_cars_l1:
+ 209 0078 24 60		mov 	r4, #CROSSING_PEDESTRIAN_ST
+ 210 007A D7 5B		b		main_loop
+ 211           	case_crossing_pedestrians:
+ 212 007C 91 5C		bl		turn_cars_red_on						; L1 a vermelho
+ 213 007E A8 5C		bl		turn_pedestrians_green_on				; L2 a verde
+ 214           		;mov		r1, #CONFIG_MASK						; r1 = #CONFIG_MASK
+ 215           		;and		r0, r5, r1								; De acordo com a imagem do porto de entrada vê a config
+ 216 0080 80 B2		mov 	r0, r5
+ 217 0082 C2 5C		bl 		get_config
+ 218 0084 11 60		mov 	r1, #ONE								; r1 = 1
+ 219 0086 80 B8		cmp 	r0, r1									; r0 - r1, se for 0 significa que r0 = r1 = 1 
+ 220 0088 11 44		bzc		case_crossing_pedestrians_l0			; se for false testa times
+ 221           		;mov		r1, #TIME_MASK							; r1 = #TIME_MASK
+ 222           		;and		r1, r5, r1								; De acordo com a imagem do porto de entrada vê crossing_times
+ 223           		;lsr		r1, r1, #TIME_POS						; Coloca nos bits de menor peso
+ 224 008A 80 B2		mov		r0, r5
+ 225 008C C1 5C		bl 		get_time
+ 226 008E F1 0F		ldr		r1, crossing_times_addr					; Carrega o endereço de crossing_times disponíveis para o led dos peões
+ 227 0090 11 18		ldrb	r1, [r1, r0]							; Indexa o array de crossing times de acordo o valor presente dos 3 bits de maior peso do porto de entrada
+ 228 0092 00 B3		mov		r0, r6									; timeref
+ 229 0094 62 5C		bl		timeout									; verifica timeout da luz dos peões
+ 230 0096 11 60		mov		r1, #ONE								; r1 = 1
+ 231 0098 80 B8		cmp 	r0, r1									; timeout - 1
+ 232 009A 0A 44		bzc		case_crossing_pedestrians_l1			; if timeout - 1 for false testa button
+ 233           		;mov		r1, #PEDESTRIAN_BUTTON_MASK			
+ 234           		;and		r0, r5, r1								; De acordo a imagem do porto de entrada vê a button 
+ 235 009C 80 B2		mov 	r0, r5
+ 236 009E B0 5C		bl 		get_pedestrian_button
+ 237 00A0 01 60		mov		r1, #ZERO								; r1 = #ZERO 
+ 238 00A2 80 B8		cmp 	r0, r1									; r0 - r1 
+ 239 00A4 EB 47		bzc		case_crossing_pedestrians				; if button - 0 for false tirar ref do tempo e saltar para o estado case_crossing_pedestrians
+ 240 00A6 23 5C		bl 		sysclk_get_ticks						; take_timeref
+ 241 00A8 06 B0		mov 	r6, r0									; Referência do tempo atual
+ 242 00AA E8 5B		b		case_crossing_pedestrians
+ 243           	case_crossing_pedestrians_l0:
+ 244 00AC 44 60		mov		r4, #CONFIG_ST
+ 245 00AE BD 5B		b		main_loop
+ 246           	case_crossing_pedestrians_l1:
+ 247 00B0 04 60		mov 	r4, #CROSSING_CARS_ST
+ 248 00B2 BB 5B		b		main_loop
+ 249           	case_config:
+ 250 00B4 9F 5C		bl 		turn_cars_yellow_on
+ 251 00B6 8C 5C		bl 		turn_pedestrians_green_on
+ 252 00B8 7F 5C		bl		turn_mode_yellow_on
+ 253 00BA 01 61		mov		r1, #CONFIG_MASK						; r1 = #CONFIG_MASK
+ 254 00BC D0 C0		and		r0, r5, r1								; De acordo com a imagem do porto de entrada vê a config
+ 255 00BE 01 60		mov 	r1, #ZERO								; r1 = 0
+ 256 00C0 80 B8		cmp 	r0, r1									; r0 - r1, se for 1 significa que r0 = r1 = 1 
+ 257 00C2 0C 44		bzc		case_config_l0							; se for false, testa timeout
+ 258 00C4 00 B3		mov		r0, r6									; Colocar a referência do tempo em r0
+ 259 00C6 51 60		mov		r1, #BLINK_TIME							; Colocar em r1 o valor que quero passar ao timeout
+ 260 00C8 48 5C		bl 		timeout									; Avalia se houve timeout
+ 261 00CA 01 60		mov 	r1, #ZERO								; r1 = 0
+ 262 00CC 80 B8		cmp 	r0, r1									; r0 - r1
+ 263 00CE F2 47		bzc		case_config								; se for false, testa state			
+ 264 00D0 71 0C		ldr		r1, state_time_addr1						; Carrega o endereço de state_time
+ 265 00D2 11 00		ldr		r1, [r1]								; variável state referente ao tempo
+ 266 00D4 5A 5C		bl 		evaluate_state_config							; avalia o state do tempo baseado no timeout
+ 267 00D6 0B 5C		bl 		sysclk_get_ticks						; Tirar nova referência de tempo
+ 268 00D8 06 B0		mov 	r6, r0									; Referência do tempo atual
+ 269 00DA EC 5B		b 		case_config
+ 270           	case_config_l0:
+ 271 00DC 04 60		mov 	r4, #CROSSING_CARS_ST
+ 272 00DE A5 5B		b 		main_loop
+ 273           	
+ 274           	state_time_addr1:
+ 275 00E0 7E 02		.word 	state_time
+ 276           	;--------------------------------------------------------------------
+ 277           	
+ 278           	; Rotinas referentes ao Pico-Timer
+ 279           	
+ 280           	sysclk_init:
+ 281 00E2 0E 24		push 	lr
+ 282 00E4 16 5C		bl		ptc_init			; Recebe em r0 o valor do intervalo (do módulo para o TMR) e inicia o pTC
+ 283 00E6 00 60		mov		r0, #0
+ 284 00E8 11 0D		ldr		r1, sysclk_addr		; Inicializa a variável em memória sysclk a zero
+ 285 00EA 10 20		str		r0, [r1, #0]
+ 286 00EC 0F 04		pop		pc
+ 287           	
+ 288           	sysclk_get_ticks:
+ 289 00EE E0 0C		ldr		r0, sysclk_addr
+ 290 00F0 00 00		ldr		r0, [r0]
+ 291 00F2 0F B7		mov		pc, lr
+ 292           	
+ 293           	isr:
+ 294 00F4 00 24		push 	r0
+ 295 00F6 01 24		push 	r1
+ 296 00F8 91 0C		ldr		r1, sysclk_addr
+ 297 00FA 10 00		ldr		r0, [r1]
+ 298 00FC 80 A0		add		r0, r0, #1
+ 299 00FE 10 20		str		r0, [r1]			; Incrementa o valor da variável global sysclk
+ 300 0100 F0 0D		ldr		r0, ptc_addr
+ 301 0102 11 60		mov		r1, #PTC_CMD_STOP
+ 302 0104 10 2B		strb	r0, [r1, #PTC_TIR]	
+ 303 0106 01 04		pop		r1
+ 304 0108 00 04		pop		r0
+ 305 010A 20 B0		movs 	pc, lr	
+ 306           	
+ 307           	sysclk_addr:
+ 308 010C 70 02		.word	sysclk
+ 309           	
+ 310           	crossing_times_addr:
+ 311 010E 74 02	    .word   crossing_times
+ 312           	
+ 313           	led_state_addr:
+ 314 0110 6F 02	    .word   led_state
+ 315           	
+ 316           	ptc_init:
+ 317 0112 0E 24	    push    lr
+ 318 0114 51 0D		ldr		r1, ptc_addr
+ 319 0116 12 60		mov		r2, #PTC_CMD_STOP
+ 320 0118 12 28		strb	r2, [r1, #PTC_TCR]
+ 321 011A 10 29		strb	r0, [r1, #PTC_TMR]
+ 322 011C 0E 5C	    bl  	ptc_clr_irq
+ 323 011E 02 60		mov		r2, #PTC_CMD_START
+ 324 0120 12 28		strb	r2, [r1, #PTC_TCR]
+ 325 0122 0F 04		pop 	pc
+ 326           	
+ 327           	ptc_start:
+ 328 0124 D0 0C		ldr		r0, ptc_addr
+ 329 0126 01 60		mov		r1, #PTC_CMD_START
+ 330 0128 01 28		strb	r1, [r0, #PTC_TCR]
+ 331 012A 0F B7		mov		pc, lr
+ 332           	
+ 333           	ptc_stop:
+ 334 012C 90 0C		ldr		r0, ptc_addr
+ 335 012E 11 60		mov		r1, #PTC_CMD_STOP
+ 336 0130 01 28		strb	r1, [r0, #PTC_TCR]
+ 337 0132 0F B7		mov		pc, lr
+ 338           	
+ 339           	ptc_get_value:
+ 340 0134 51 0C		ldr		r1, ptc_addr
+ 341 0136 10 0A		ldrb	r0, [r1, #PTC_TC]
+ 342 0138 0F B7		mov		pc, lr
+ 343           	
+ 344           	ptc_clr_irq:
+ 345 013A 20 0C		ldr		r0, ptc_addr
+ 346 013C 01 2B		strb	r1, [r0, #PTC_TIR]
+ 347 013E 0F B7		mov		pc, lr
+ 348           	
+ 349           	
+ 350           	ptc_addr:
+ 351 0140 40 FF		.word	PTC_ADDRESS
+ 352           	
+ 353           	/*
+ 354           	uint8_t b_last;
+ 355           	uint8_t detect_raising_edge(uint8_t b_now) : boolean {
+ 356           		uint8_t raising_edge = b_last == 0 && b_now == 1;
+ 357           		b_last = b_now;
+ 358           		return raising_edge;
+ 359           	}
+ 360           	*/
+ 361           	detect_raising_edge:
+ 362 0142 01 B0		mov		r1, r0						; b_now
+ 363 0144 00 60		mov		r0, #0						; r0 = 0 raising_edge = FALSE
+ 364 0146 82 0C		ldr		r2, button_state_addr
+ 365 0148 22 00		ldr		r2, [r2]					; b_last
+ 366 014A 20 B8		cmp		r2, r0						; b_last - 0
+ 367 014C 03 40		bzs		detect_raising_edge_l0	    ; b_last == 0 
+ 368 014E 10 60		mov		r0, #1						; raising_edge = true
+ 369 0150 10 B8		cmp 	r1, r0						; b_now - 0
+ 370 0152 00 44		bzc		detect_raising_edge_l0		; b_now != 0
+ 371           	detect_raising_edge_l0:
+ 372 0154 21 20		str 	r1, [r2]
+ 373 0156 0F B7		mov		pc, lr						; return raising_edge
+ 374           	
+ 375           	
+ 376           	button_state_addr:
+ 377 0158 6E 02	    .word   button_state
+ 378           	
+ 379           		
+ 380           	/* fun timeout(timeRef, timeToCompare):{
+ 381           		val presentTime = sysclk_get_ticks()
+ 382           		val sub = presentTime - timeRef
+ 383           		var timeout = false
+ 384           	
+ 385           		if((timeToCompare - sub) >= timeToCompare) timeout = true
+ 386           		else timeout = false
+ 387           	
+ 388           		return timeout
+ 389           	}*/
+ 390           	
+ 391           	; r0= timeRef, r1= timeToCompare
+ 392           	
+ 393           	timeout:
+ 394 015A 0E 24		push 	lr
+ 395 015C 04 24		push 	r4
+ 396 015E 02 B0		mov		r2, r0					; timeref
+ 397 0160 C6 5F		bl 		sysclk_get_ticks		; Tempo atual em ticks
+ 398 0162 04 B0		mov		r4, r0					; presentTime 
+ 399 0164 40 89		sub 	r0, r4, r2				; sub
+ 400 0166 13 88		sub		r3, r1, r0				; timeToCompare - sub
+ 401 0168 00 60		mov		r0, #0					; timeout = false
+ 402 016A 90 B9		cmp 	r1, r3					; timeToCompare - (timeToCompare - sub)
+ 403 016C 01 4C		blo		timeout_l0				; caso seja menor salta
+ 404 016E 10 60		mov		r0, #1					; timeout = true
+ 405           	timeout_l0:
+ 406 0170 04 04		pop 	r4
+ 407 0172 0F 04		pop		pc
+ 408           	
+ 409           	/*
+ 410           	fun evaluateStateTime(timeout: Boolean, stateActual: Boolean).{
+ 411           		if(timout == true(1)){
+ 412           			if(stateActual == true){
+ 413           				outportSetBits (of L1 to green and L2 to red)
+ 414           			}
+ 415           			else outportClrBits (of L1 to nothing and L2 to nothing)
+ 416           		}
+ 417           	
+ 418           	}
+ 419           	*/
+ 420           	
+ 421           	; r0 = timeout, r1 = stateAtual
+ 422           	evaluate_state_cars:
+ 423 0174 0E 24		push 	lr
+ 424 0176 12 60		mov 	r2, #ONE
+ 425 0178 00 B9		cmp 	r0, r2							; timeout - 1
+ 426 017A 06 40		bzs		evaluate_state_cars_l0				; flag z a zero salta, caso contrário continua
+ 427 017C 10 B9		cmp 	r1, r2							; state_time - 1
+ 428 017E 02 40		bzs		evaluate_state_cars_l1				; flag z a zero salta, caso contrário continua
+ 429 0180 21 5C		bl		turn_cars_green_on				; L1 a verde
+ 430 0182 14 5C		bl		turn_pedestrians_red_on			; L2 a vermelho
+ 431           	evaluate_state_cars_l1:
+ 432 0184 2B 5C		bl		turn_cars_off
+ 433 0186 30 5C		bl		turn_pedestrians_off
+ 434           	evaluate_state_cars_l0:
+ 435 0188 0F 04		pop 	pc
+ 436           	
+ 437           	; r0 = timeout, r1 = stateAtual
+ 438           	evaluate_state_config:
+ 439 018A 0E 24		push 	lr
+ 440 018C 12 60		mov 	r2, #ONE
+ 441 018E 00 B9		cmp 	r0, r2							; timeout - 1
+ 442 0190 06 40		bzs		evaluate_state_config_l0		; flag z a zero salta, caso contrário continua
+ 443 0192 10 B9		cmp 	r1, r2							; state_time - 1
+ 444 0194 02 40		bzs		evaluate_state_config_l1		; flag z a zero salta, caso contrário continua
+ 445 0196 2E 5C		bl		turn_cars_yellow_on
+ 446 0198 1B 5C		bl		turn_pedestrians_green_on
+ 447           	evaluate_state_config_l1:
+ 448 019A 20 5C		bl		turn_cars_off
+ 449 019C 25 5C		bl		turn_pedestrians_off
+ 450           	evaluate_state_config_l0:
+ 451 019E 0F 04		pop 	pc
+ 452           	
+ 453           	
+ 454           	turn_cars_red_on:
+ 455 01A0 0E 24		push 	lr
+ 456 01A2 20 60		mov 	r0, #TRAFFIC_LIGHT_G_MASK
+ 457 01A4 44 5C		bl		outport_clear_bits
+ 458 01A6 10 60		mov		r0, #TRAFFIC_LIGHT_R_MASK
+ 459 01A8 3B 5C		bl		outport_set_bits
+ 460 01AA 0F 04		pop 	pc
+ 461           	
+ 462           	turn_pedestrians_red_on:
+ 463 01AC 0E 24		push	lr
+ 464 01AE 80 60		mov 	r0, #PEDESTRIAN_LIGHT_G_MASK
+ 465 01B0 3E 5C		bl		outport_clear_bits
+ 466 01B2 40 60		mov		r0, #PEDESTRIAN_LIGHT_R_MASK
+ 467 01B4 35 5C		bl		outport_set_bits
+ 468 01B6 0F 04		pop		pc
+ 469           	
+ 470           	turn_mode_yellow_on:
+ 471 01B8 0E 24		push 	lr
+ 472 01BA 00 62		mov 	r0, #MODE_G_MASK
+ 473 01BC 31 5C		bl		outport_set_bits
+ 474 01BE 00 61		mov		r0, #MODE_R_MASK
+ 475 01C0 2F 5C		bl		outport_set_bits
+ 476 01C2 0F 04		pop 	pc
+ 477           	
+ 478           	turn_cars_green_on:
+ 479 01C4 0E 24		push 	lr
+ 480 01C6 20 60		mov 	r0, #TRAFFIC_LIGHT_G_MASK
+ 481 01C8 2B 5C		bl		outport_set_bits
+ 482 01CA 10 60		mov		r0, #TRAFFIC_LIGHT_R_MASK
+ 483 01CC 30 5C		bl		outport_clear_bits
+ 484 01CE 0F 04		pop 	pc
+ 485           	
+ 486           	turn_pedestrians_green_on:
+ 487 01D0 0E 24		push	lr
+ 488 01D2 80 60		mov 	r0, #PEDESTRIAN_LIGHT_G_MASK
+ 489 01D4 25 5C		bl		outport_set_bits
+ 490 01D6 40 60		mov		r0, #PEDESTRIAN_LIGHT_R_MASK
+ 491 01D8 2A 5C		bl		outport_clear_bits
+ 492 01DA 0F 04		pop		pc
+ 493           	
+ 494           	turn_cars_off:
+ 495 01DC 0E 24		push	lr
+ 496 01DE 20 60		mov 	r0, #TRAFFIC_LIGHT_G_MASK
+ 497 01E0 26 5C		bl 		outport_clear_bits
+ 498 01E2 10 60		mov 	r0, #TRAFFIC_LIGHT_R_MASK
+ 499 01E4 24 5C		bl 		outport_clear_bits
+ 500 01E6 0F 04		pop 	pc
+ 501           	
+ 502           	turn_pedestrians_off:
+ 503 01E8 0E 24		push 	lr
+ 504 01EA 80 60		mov		r0, #PEDESTRIAN_LIGHT_G_MASK
+ 505 01EC 20 5C		bl 		outport_clear_bits
+ 506 01EE 40 60		mov		r0, #PEDESTRIAN_LIGHT_R_MASK
+ 507 01F0 1E 5C		bl 		outport_clear_bits
+ 508 01F2 0F 04		pop		pc
+ 509           	
+ 510           	turn_cars_yellow_on:
+ 511 01F4 0E 24		push 	lr
+ 512 01F6 20 60		mov		r0, #TRAFFIC_LIGHT_G_MASK
+ 513 01F8 13 5C		bl 		outport_set_bits
+ 514 01FA 10 60		mov		r0, #TRAFFIC_LIGHT_R_MASK
+ 515 01FC 11 5C		bl 		outport_set_bits
+ 516 01FE 0F 04		pop		pc
+ 517           	
+ 518           	;-----------------------------------------------------
+ 519           	
+ 520           	; Camada aplicacional
+ 521           	
+ 522           	;-----------------------------------------------------
+ 523           	
+ 524           	; uint8_t get_pedestrian_button(uint8_t inport_val);
+ 525           	get_pedestrian_button:
+ 526 0200 11 60	    mov     r1, #PEDESTRIAN_BUTTON_MASK
+ 527 0202 80 C0	    and     r0, r0, r1
+ 528 0204 00 E8	    lsr     r0, r0, #PEDESTRIAN_BUTTON_POS
+ 529 0206 0F B7	    mov     pc, lr
+ 530           	
+ 531           	; uint8_t get_config(uint8_t inport_val);
+ 532           	get_config:
+ 533 0208 01 61	    mov     r1, #CONFIG_MASK
+ 534 020A 80 C0	    and     r0, r0, r1
+ 535 020C 00 EA	    lsr     r0, r0, #CONFIG_POS
+ 536 020E 0F B7	    mov     pc, lr
+ 537           	
+ 538           	; uint8_t get_time(uint8_t inport_val);
+ 539           	get_time:
+ 540 0210 01 6E	    mov     r1, #TIME_MASK
+ 541 0212 80 C0	    and     r0, r0, r1
+ 542 0214 80 EA	    lsr     r0, r0, #TIME_POS
+ 543 0216 0F B7	    mov     pc, lr
+ 544           	
+ 545           	; Gestor de periférico para o porto de entrada
+ 546           	;
+ 547           	
+ 548           	; Rotina:    inport_read
+ 549           	; Descricao: Adquire e devolve o valor corrente do porto de entrada.
+ 550           	;            Interface exemplo: uint8_t inport_read( );
+ 551           	; Entradas:  -
+ 552           	; Saidas:    R0 - valor adquirido do porto de entrada
+ 553           	; Efeitos:   -
+ 554           	inport_read:
+ 555 0218 21 0C		ldr		r1, inport_addr
+ 556 021A 10 08		ldrb	r0, [r1, #0]
+ 557 021C 0F B7		mov		pc, lr
+ 558           	
+ 559           	inport_addr:
+ 560 021E 80 FF		.word	INPORT_ADDRESS
+ 561           	
+ 562           	; Gestor de periférico para o porto de saída
+ 563           	;
+ 564           	
+ 565           	; Rotina:    outport_set_bits
+ 566           	; Descricao: Atribui o valor logico 1 aos bits do porto de saida identificados
+ 567           	;            com o valor 1 em R0. O valor dos outros bits nao e alterado.
+ 568           	;            Interface exemplo: void outport_set_bits( uint8_t pins_mask );
+ 569           	; Entradas:  R0 - Mascara com a especificacao do indice dos bits a alterar.
+ 570           	; Saidas:    -
+ 571           	; Efeitos:   Altera o valor da variavel global outport_img.
+ 572           	outport_set_bits:
+ 573 0220 0E 24		push	lr
+ 574 0222 21 0D		ldr		r1, outport_img_addr
+ 575 0224 12 08		ldrb	r2, [r1, #0]
+ 576 0226 20 C8		orr		r0, r2, r0
+ 577 0228 10 28		strb	r0, [r1, #0]
+ 578 022A 0F 5C		bl		outport_write
+ 579 022C 0F 04		pop		pc
+ 580           	
+ 581           	; Rotina:    outport_clear_bits
+ 582           	; Descricao: Atribui o valor logico 0 aos bits do porto de saida identificados
+ 583           	;            com o valor 1 em R0. O valor dos outros bits nao e alterado.
+ 584           	;            Interface exemplo: void outport_clear_bits( uint8_t pins_mask );
+ 585           	; Entradas:  R0 - Mascara com a especificacao do indice dos bits a alterar.
+ 586           	; Saidas:    -
+ 587           	; Efeitos:   Altera o valor da variavel global outport_img.
+ 588           	outport_clear_bits:
+ 589 022E 0E 24		push	lr
+ 590 0230 B1 0C		ldr		r1, outport_img_addr
+ 591 0232 12 08		ldrb	r2, [r1, #0]
+ 592 0234 10 B0		mvn		r0, r0
+ 593 0236 20 C0		and		r0, r2, r0
+ 594 0238 10 28		strb	r0, [r1]
+ 595 023A 07 5C		bl		outport_write
+ 596 023C 0F 04		pop		pc
+ 597           	
+ 598           	; Rotina:    outport_init
+ 599           	; Descricao: Faz a iniciacao do porto de saida, nele estabelecendo o valor
+ 600           	;            recebido em R0.
+ 601           	;            Interface exemplo: void outport_init( uint8_t value );
+ 602           	; Entradas:  R0 - Valor a atribuir ao porto de saida.
+ 603           	; Saidas:    -
+ 604           	; Efeitos:   Altera o valor da variavel global outport_img.
+ 605           	outport_init:
+ 606 023E 0E 24		push	lr
+ 607 0240 31 0C		ldr		r1, outport_img_addr
+ 608 0242 10 28		strb	r0, [r1]
+ 609 0244 02 5C		bl		outport_write
+ 610 0246 0F 04		pop		pc
+ 611           	
+ 612           	outport_img_addr:
+ 613 0248 72 02		.word	outport_img
+ 614           	
+ 615           	; Rotina:    outport_write
+ 616           	; Descricao: Escreve no porto de saida o valor recebido em R0.
+ 617           	;            Interface exemplo: void outport_write( uint8_t value );
+ 618           	; Entradas:  R0 - valor a atribuir ao porto de saida.
+ 619           	; Saidas:    -
+ 620           	; Efeitos:   -
+ 621           	outport_write:
+ 622 024A 21 0C		ldr	r1, outport_addr
+ 623 024C 10 28		strb	r0, [r1, #0]
+ 624 024E 0F B7		mov	pc, lr
+ 625           	
+ 626           	
+ 627           	outport_addr:
+ 628 0250 C0 FF		.word	OUTPORT_ADDRESS
+ 629           	
+ 630           	/*
+ 631           	
+ 632           	/* fun timeout(timeRef):{
+ 633           		val presentTime = sysclk_get_ticks()
+ 634           		val sub = presentTime - timeRef
+ 635           		var timeout = false
+ 636           	
+ 637           		if((#BLINK_TIME - sub) >= #BLINK_TIME) timeout = true
+ 638           		else timeout = false
+ 639           	
+ 640           		return timeout
+ 641           	}*/
+ 642           	
+ 643           	timeout_blink:
+ 644 0252 0E 24		push 	lr
+ 645 0254 04 24		push	r4
+ 646 0256 01 B0		mov		r1, r0					; timeRef
+ 647 0258 4A 5F		bl 		sysclk_get_ticks		; Tempo atual em ticks
+ 648 025A 04 B0		mov		r4, r0					; presentTime 
+ 649 025C C0 88		sub 	r0, r4, r1				; sub
+ 650 025E 52 60		mov		r2, #BLINK_TIME			; Tempo a atingir
+ 651 0260 21 88		sub 	r1, r2, r0				; (#BLINK_TIME - sub) 
+ 652 0262 00 60		mov		r0, #0					; timeout = false
+ 653 0264 10 B9		cmp 	r1, r2					; (#BLINK_TIME - sub) >= #BLINK_TIME
+ 654 0266 01 4C		blo		timeout_blink_end		; if((#BLINK_TIME - sub) >= #BLINK_TIME) for false não houve timeout = 0
+ 655 0268 10 60		mov		r0, #1					; Caso contrário timeout = true
+ 656           	timeout_blink_end:
+ 657 026A 04 04		pop		r4
+ 658 026C 0F 04		pop		pc
+ 659           	
+ 660           	
+ 661           	
+ 662           		.data
+ 663           	
+ 664           	button_state:
+ 665 026E 00   	    .space 1
+ 666           	
+ 667           	led_state:
+ 668 026F 00   	    .space 1
+ 669           	
+ 670           	sysclk:
+ 671 0270 00   		.space	2
+ 671 0271 00
+ 672           	
+ 673           	outport_img:
+ 674 0272 00   		.space	1
+ 675 0273 00  		.align
+ 676           	crossing_times:
+ 677          	    .word       100, 150, 200, 250, 300
+ 677 0274 64 00 96 00 C8 00 FA 00 2C 01
+ 678           	
+ 679           	state_time:
+ 680 027E 00   		.space 1
+ 681           	
+ 682           		.section .stack
+ 683 0280 00   		.space	STACK_SIZE
+ 683 .... ..
+ 683 02BF 00
+ 684           	stack_top:
+ 684           	

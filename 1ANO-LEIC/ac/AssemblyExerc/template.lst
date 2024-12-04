@@ -1,0 +1,66 @@
+P16 assembler v1.5 (Feb  9 2024)	c:\Users\gonca\OneDrive\Documentos\Licenciatura\Arquitetura_de_Computadores\SV_23_24\labs\template.lst	Wed Mar 13 11:16:06 2024
+
+Sections
+Index   Name            Address   Size
+0       .startup        0000      0012 18
+1       .text           0012      0006 6
+2       .data           0018      0000 0
+3       .stack          0018      0040 64
+
+Symbols
+Name                    Type      Value       Section
+_start                  LABEL     0004 4      .startup
+line#15                 LABEL     000C 12     .startup
+line#9                  LABEL     0002 2      .startup
+main                    LABEL     0012 18     .text
+main_addr               LABEL     0010 16     .startup
+STACK_SIZE              ABSOLUTE  0058 88     .data
+stack_top               LABEL     0058 88     .stack
+stack_top_addr          LABEL     000E 14     .startup
+
+Code listing
+   1           	/* Secção de arranque: código de inicialização
+   2           	 * 1. Estabelece vetores (entry point após reset e de interrupção)
+   3           	 * 2. Inicia stack pointer
+   4           	 * 3. Chama main
+   5           	 * 4. Retém a execução do CPU após o retorno do main
+   6           	 */
+   7           		.section .startup
+   8 0000 01 58		b		_start
+   9 0002 FF 5B		b 		.
+  10           	_start:
+  11 0004 4D 0C		ldr		sp, stack_top_addr
+  12 0006 80 B7		mov		r0, pc
+  13 0008 0E A2		add		lr, r0, #4
+  14 000A 2F 0C		ldr		pc, main_addr
+  15 000C FF 5B		b 		.	
+  16           	stack_top_addr:
+  17 000E 58 00		.word stack_top
+  18           	main_addr:
+  19 0010 12 00		.word	main
+  20           		
+  21           	/* Secção com código aplicacional (programa)
+  22           	 */
+  23           		.text
+  24           	main:
+  25           		; salva LR se função não folha
+  26 0012 0E 24		push	lr
+  27           	
+  28           		; retorna desempilhando endereço de retorno se função não folha
+  29 0014 0F 04		pop		pc
+  30           		; retorna transferindo LR para PC se função folha
+  31 0016 0F B7		mov		pc, lr
+  32           		
+  33           	/* Dados globais do programa iniciados
+  34           	 */ 
+  35           		.data
+  36           	
+  37           	/* Stack: pilha com dados temporários
+  38           	 */
+  39          		.equ STACK_SIZE, 64
+  40           		.section .stack
+  41 0018 00   		.space STACK_SIZE
+  41 .... ..
+  41 0057 00
+  42           	stack_top:
+  42           	

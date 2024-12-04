@@ -1,0 +1,32 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity Parity_Check is
+port( data: in std_logic;
+		init: in std_logic;
+		clk: in std_logic;
+		err: out std_logic
+);
+
+end Parity_Check;
+
+architecture ARQ_Parity_Check is
+
+signal dataAux: std_logic_vector (7 downto 0);
+signal MCLK: std_logic;
+
+begin
+
+dataAux(0) <= data(0) xor data(1);
+dataAux(1) <= dataAux(0) xor data(2);
+dataAux(2) <= dataAux(1) xor data(3);
+dataAux(3) <= dataAux(2) xor data(4);
+dataAux(4) <= dataAux(3) xor data(5);
+dataAux(5) <= dataAux(4) xor data(6);
+dataAux(6) <= dataAux(5) xor data(7);
+dataAux(7) <= dataAux(6) xor data(8);
+err <= init xor dataAux(7);
+clk <= MCLK;
+
+end ARQ_Parity_Check;
+

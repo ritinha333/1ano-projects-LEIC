@@ -2,9 +2,9 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/1ANO-LEIC/aed/serie1AED" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/1ANO-LEIC/aed/serie2AED" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/1ANO-LEIC/aed/serie3AED" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/1ANO-LEIC/aed/Serie1" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/1ANO-LEIC/aed/Serie2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/1ANO-LEIC/aed/Serie3" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/1ANO-LEIC/lic/SpaceInvadersSoftware" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/1ANO-LEIC/redes/web_server" vcs="Git" />
   </component>
